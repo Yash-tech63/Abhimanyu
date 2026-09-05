@@ -6,56 +6,58 @@ import HealthBot from './HealthBot';
 const AskScan = ({ onNavigate, lang = Language.EN }) => {
   const t = translations[lang].sections;
 
+  const isHindi = lang === Language.HI;
+
   const apps = [
     {
-      title: 'Nutrition Hub',
-      desc: 'Individual app for natural wellness & remedies.',
+      title: isHindi ? 'न्यूट्रिशन हब' : 'Nutrition Hub',
+      desc: isHindi ? 'प्राकृतिक स्वास्थ्य और उपचार के लिए व्यक्तिगत ऐप।' : 'Individual app for natural wellness & remedies.',
       icon: '🥗',
       view: AppView.NUTRITION_GUIDE,
       color: 'text-green-600',
       bg: 'bg-green-50 dark:bg-green-900/20',
       img: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=600',
-      tag: 'Verified Remedies'
+      tag: isHindi ? 'सत्यापित उपचार' : 'Verified Remedies'
     },
     {
-      title: 'Diet Planner',
-      desc: 'Intake tracker, macro insights, and calorie budget.',
+      title: isHindi ? 'डाइट प्लानर' : 'Diet Planner',
+      desc: isHindi ? 'कैलोरी और आहार ट्रैकर।' : 'Intake tracker, macro insights, and calorie budget.',
       icon: '📋',
       view: AppView.DIET_PLAN,
       color: 'text-orange-600',
       bg: 'bg-orange-50 dark:bg-orange-900/20',
       img: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600',
-      tag: 'Clinical Tracking'
+      tag: isHindi ? 'नैदानिक ट्रैकिंग' : 'Clinical Tracking'
     },
     {
-      title: 'Yoga Academy',
-      desc: 'Posture analysis, live flows, and meditation apps.',
+      title: isHindi ? 'योग अकादमी' : 'Yoga Academy',
+      desc: isHindi ? 'आसन विश्लेषण और लाइव ध्यान अभ्यास।' : 'Posture analysis, live flows, and meditation apps.',
       icon: '🧘‍♀️',
       view: AppView.YOGA,
       color: 'text-purple-600',
       bg: 'bg-purple-50 dark:bg-purple-900/20',
       img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600',
-      tag: 'Motion AI'
+      tag: isHindi ? 'मोशन एआई' : 'Motion AI'
     },
     {
-      title: 'Remedy Hub',
-      desc: 'Home remedies verified by clinical experts.',
+      title: isHindi ? 'घरेलू उपचार हब' : 'Remedy Hub',
+      desc: isHindi ? 'विशेषज्ञों द्वारा सत्यापित पारंपरिक घरेलू नुस्खे।' : 'Home remedies verified by clinical experts.',
       icon: '🍯',
-      view: AppView.NUTRITION_GUIDE,
+      view: AppView.REMEDY_HUB,
       color: 'text-amber-600',
       bg: 'bg-amber-50 dark:bg-amber-900/20',
       img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
-      tag: 'Ancient Secrets'
+      tag: isHindi ? 'प्राचीन आयुर्वेद' : 'Ancient Secrets'
     },
   ];
 
   return (
     <section className="px-4 md:px-6 py-20 space-y-16 max-w-7xl mx-auto w-full">
-      <div className="space-y-6 max-w-3xl">
-        <h2 className="text-5xl md:text-6xl font-black text-slate-800 dark:text-white leading-none tracking-tighter">
+      <div className="space-y-4 max-w-3xl">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-800 dark:text-white leading-tight tracking-tight">
           {t.wellnessCenter}
         </h2>
-        <p className="text-slate-500 dark:text-slate-400 text-xl font-medium tracking-tight leading-relaxed">
+        <p className="text-slate-500 dark:text-slate-400 text-base md:text-lg font-medium tracking-normal leading-relaxed">
           {t.wellnessSub}
         </p>
       </div>

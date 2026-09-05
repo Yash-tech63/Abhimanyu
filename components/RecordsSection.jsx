@@ -10,8 +10,8 @@ const RecordsSection = ({ onNavigate, lang = Language.EN }) => {
     <section className="px-4 md:px-8 py-20 space-y-16 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row items-end justify-between gap-8 border-b dark:border-white/5 pb-12">
         <div className="space-y-3">
-          <h2 className="text-5xl font-black text-slate-800 dark:text-white tracking-tighter leading-none">{t.records}</h2>
-          <p className="text-slate-500 dark:text-slate-400 font-medium text-xl leading-relaxed max-w-xl">{t.recordsSub}</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-800 dark:text-white tracking-tight leading-tight">{t.records}</h2>
+          <p className="text-slate-500 dark:text-slate-400 font-medium text-base md:text-lg leading-relaxed max-w-xl">{t.recordsSub}</p>
         </div>
         <button
           onClick={() => setShowLogModal(true)}

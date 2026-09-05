@@ -3,6 +3,7 @@ export const AppView = {
   STORE: 'store',
   DIET_PLAN: 'diet_plan',
   NUTRITION_GUIDE: 'nutrition_guide',
+  REMEDY_HUB: 'remedy_hub',
   YOGA: 'yoga',
   ACCOUNT: 'account',
   EQUIPMENT_PORTAL: 'equipment_portal',
@@ -14,7 +15,8 @@ export const AppView = {
   SCANNER: 'scanner',
   WELLNESS: 'wellness',
   EXCHANGE_HUB: 'exchange_hub',
-  AMBULANCE: 'ambulance'
+  AMBULANCE: 'ambulance',
+  HOSPITALS: 'hospitals'
 };
 
 export const Language = {
