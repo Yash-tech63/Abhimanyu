@@ -1,0 +1,27 @@
+{
+  "name": "backened",
+  "version": "1.0.0",
+  "description": "",
+  "main": "i18n.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "npx nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@react-oauth/google": "^0.13.5",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "google-auth-library": "^11.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.5",
+    "nodemailer": "^10.0.0",
+    "twilio": "^6.1.0"
+  }
+}
