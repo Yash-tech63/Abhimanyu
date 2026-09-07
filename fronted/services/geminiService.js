@@ -18,7 +18,7 @@ export async function askHealthBot(question, base64Image) {
       model: 'gemini-3-flash-preview',
       contents: { parts },
       config: {
-        systemInstruction: `You are Pulseplus HealthBot, a friendly medical assistant. 
+        systemInstruction: `You are abhimanyu HealthBot, a friendly medical assistant. 
         Focus: 1. Prescription Analysis 2. Injury First Aid 3. Traditional Remedies.
         Always advise consulting an Ayushman-verified doctor for serious conditions.`,
       }

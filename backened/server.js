@@ -12,9 +12,40 @@ const connectDB =
 const authRoutes =
     require("./src/routes/auth.routes");
 const otpRoutes = require("./src/routes/otpRoutes")
-
+const chatRoutes = require("./src/routes/chat.routes")
+const opdTokenRoutes = require("./src/routes/OPD.token.routes")
 const app =
     express();
+
+app.use((req, res, next) => {
+    express.json({
+        strict: false,
+        limit: "10mb",
+        verify: (req, res, buf) => {
+            try {
+                JSON.parse(buf.toString());
+            } catch (err) {
+                req.invalidJson = true;
+            }
+        }
+    })(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid JSON payload."
+            });
+        }
+
+        if (req.invalidJson && req.body !== undefined && req.headers["content-type"]?.includes("application/json")) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid JSON payload."
+            });
+        }
+
+        next();
+    });
+});
 
 // Database Connection
 connectDB();
@@ -44,10 +75,6 @@ app.use(
     })
 );
 
-app.use(
-    express.json()
-);
-
 // Test API
 app.get(
     "/",
@@ -65,11 +92,23 @@ app.use(
     "/api/auth",
     authRoutes
 );
+const testRoutes = require("./src/routes/testRoute");
+
+app.use("/api/test", testRoutes);
+
+app.use(
+    "/api/tokens",
+    opdTokenRoutes
+);
 
 // OTP API
 app.use(
     '/api/otp',
     otpRoutes
+);
+app.use(
+    "/api/chatbot",
+    chatRoutes
 );
 
 // 404
@@ -82,6 +121,22 @@ app.use(
         });
     }
 );
+
+app.use((err, req, res, next) => {
+    if (err?.type === "entity.parse.failed") {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid JSON payload."
+        });
+    }
+
+    console.error("SERVER_ERROR:", err);
+
+    return res.status(500).json({
+        success: false,
+        message: "Server error"
+    });
+});
 
 const PORT =
     process.env.PORT ||

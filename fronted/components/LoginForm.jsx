@@ -7,254 +7,254 @@ import api from "../services/api";
 // =====================================================
 
 const AuthBackground3D = () => {
-const containerRef = useRef(null);
+  const containerRef = useRef(null);
 
-useEffect(() => {
-const container = containerRef.current;
+  useEffect(() => {
+    const container = containerRef.current;
 
 
-if (!container) return;
+    if (!container) return;
 
-// SCENE
-const scene = new THREE.Scene();
+    // SCENE
+    const scene = new THREE.Scene();
 
-// CAMERA
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-
-camera.position.z = 5;
-
-// RENDERER
-const renderer = new THREE.WebGLRenderer({
-  alpha: true,
-  antialias: true,
-});
-
-renderer.setPixelRatio(
-  Math.min(window.devicePixelRatio, 2)
-);
-
-renderer.setSize(
-  window.innerWidth,
-  window.innerHeight
-);
-
-container.appendChild(renderer.domElement);
-
-// =================================================
-// PARTICLES
-// =================================================
-
-const particleCount = 150;
-
-const particleGeometry =
-  new THREE.BufferGeometry();
-
-const positions =
-  new Float32Array(
-    particleCount * 3
-  );
-
-for (
-  let i = 0;
-  i < particleCount * 3;
-  i++
-) {
-  positions[i] =
-    (Math.random() - 0.5) * 18;
-}
-
-particleGeometry.setAttribute(
-  "position",
-  new THREE.BufferAttribute(
-    positions,
-    3
-  )
-);
-
-const particleMaterial =
-  new THREE.PointsMaterial({
-    color: 0x60a5fa,
-    size: 0.045,
-    transparent: true,
-    opacity: 0.8,
-  });
-
-const particles =
-  new THREE.Points(
-    particleGeometry,
-    particleMaterial
-  );
-
-scene.add(particles);
-
-// =================================================
-// 3D SPHERE
-// =================================================
-
-const sphereGeometry =
-  new THREE.IcosahedronGeometry(
-    1.6,
-    2
-  );
-
-const sphereMaterial =
-  new THREE.MeshBasicMaterial({
-    color: 0x2f80ed,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.18,
-  });
-
-const sphere =
-  new THREE.Mesh(
-    sphereGeometry,
-    sphereMaterial
-  );
-
-sphere.position.set(
-  3,
-  1.5,
-  -1
-);
-
-scene.add(sphere);
-
-// =================================================
-// RING
-// =================================================
-
-const ringGeometry =
-  new THREE.TorusGeometry(
-    1.2,
-    0.04,
-    16,
-    100
-  );
-
-const ringMaterial =
-  new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.18,
-  });
-
-const ring =
-  new THREE.Mesh(
-    ringGeometry,
-    ringMaterial
-  );
-
-ring.position.set(
-  -3,
-  -1.5,
-  -1
-);
-
-scene.add(ring);
-
-// =================================================
-// ANIMATION
-// =================================================
-
-let animationId;
-
-const animate = () => {
-  animationId =
-    requestAnimationFrame(animate);
-
-  particles.rotation.y += 0.0008;
-
-  sphere.rotation.x += 0.002;
-  sphere.rotation.y += 0.003;
-
-  ring.rotation.x += 0.002;
-  ring.rotation.z += 0.002;
-
-  renderer.render(
-    scene,
-    camera
-  );
-};
-
-animate();
-
-// =================================================
-// RESPONSIVE
-// =================================================
-
-const handleResize = () => {
-  camera.aspect =
-    window.innerWidth /
-    window.innerHeight;
-
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-  );
-};
-
-window.addEventListener(
-  "resize",
-  handleResize
-);
-
-// =================================================
-// CLEANUP
-// =================================================
-
-return () => {
-  cancelAnimationFrame(
-    animationId
-  );
-
-  window.removeEventListener(
-    "resize",
-    handleResize
-  );
-
-  particleGeometry.dispose();
-  particleMaterial.dispose();
-
-  sphereGeometry.dispose();
-  sphereMaterial.dispose();
-
-  ringGeometry.dispose();
-  ringMaterial.dispose();
-
-  renderer.dispose();
-
-  if (
-    renderer.domElement &&
-    container.contains(
-      renderer.domElement
-    )
-  ) {
-    container.removeChild(
-      renderer.domElement
+    // CAMERA
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
     );
-  }
-};
+
+    camera.position.z = 5;
+
+    // RENDERER
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+    });
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    );
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    container.appendChild(renderer.domElement);
+
+    // =================================================
+    // PARTICLES
+    // =================================================
+
+    const particleCount = 150;
+
+    const particleGeometry =
+      new THREE.BufferGeometry();
+
+    const positions =
+      new Float32Array(
+        particleCount * 3
+      );
+
+    for (
+      let i = 0;
+      i < particleCount * 3;
+      i++
+    ) {
+      positions[i] =
+        (Math.random() - 0.5) * 18;
+    }
+
+    particleGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(
+        positions,
+        3
+      )
+    );
+
+    const particleMaterial =
+      new THREE.PointsMaterial({
+        color: 0x60a5fa,
+        size: 0.045,
+        transparent: true,
+        opacity: 0.8,
+      });
+
+    const particles =
+      new THREE.Points(
+        particleGeometry,
+        particleMaterial
+      );
+
+    scene.add(particles);
+
+    // =================================================
+    // 3D SPHERE
+    // =================================================
+
+    const sphereGeometry =
+      new THREE.IcosahedronGeometry(
+        1.6,
+        2
+      );
+
+    const sphereMaterial =
+      new THREE.MeshBasicMaterial({
+        color: 0x2f80ed,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.18,
+      });
+
+    const sphere =
+      new THREE.Mesh(
+        sphereGeometry,
+        sphereMaterial
+      );
+
+    sphere.position.set(
+      3,
+      1.5,
+      -1
+    );
+
+    scene.add(sphere);
+
+    // =================================================
+    // RING
+    // =================================================
+
+    const ringGeometry =
+      new THREE.TorusGeometry(
+        1.2,
+        0.04,
+        16,
+        100
+      );
+
+    const ringMaterial =
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.18,
+      });
+
+    const ring =
+      new THREE.Mesh(
+        ringGeometry,
+        ringMaterial
+      );
+
+    ring.position.set(
+      -3,
+      -1.5,
+      -1
+    );
+
+    scene.add(ring);
+
+    // =================================================
+    // ANIMATION
+    // =================================================
+
+    let animationId;
+
+    const animate = () => {
+      animationId =
+        requestAnimationFrame(animate);
+
+      particles.rotation.y += 0.0008;
+
+      sphere.rotation.x += 0.002;
+      sphere.rotation.y += 0.003;
+
+      ring.rotation.x += 0.002;
+      ring.rotation.z += 0.002;
+
+      renderer.render(
+        scene,
+        camera
+      );
+    };
+
+    animate();
+
+    // =================================================
+    // RESPONSIVE
+    // =================================================
+
+    const handleResize = () => {
+      camera.aspect =
+        window.innerWidth /
+        window.innerHeight;
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+      );
+    };
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    // =================================================
+    // CLEANUP
+    // =================================================
+
+    return () => {
+      cancelAnimationFrame(
+        animationId
+      );
+
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+
+      particleGeometry.dispose();
+      particleMaterial.dispose();
+
+      sphereGeometry.dispose();
+      sphereMaterial.dispose();
+
+      ringGeometry.dispose();
+      ringMaterial.dispose();
+
+      renderer.dispose();
+
+      if (
+        renderer.domElement &&
+        container.contains(
+          renderer.domElement
+        )
+      ) {
+        container.removeChild(
+          renderer.domElement
+        );
+      }
+    };
 
 
-}, []);
+  }, []);
 
-return ( <div
-   ref={containerRef}
-   className="
+  return (<div
+    ref={containerRef}
+    className="
      absolute
      inset-0
      overflow-hidden
      pointer-events-none
    "
- />
-);
+  />
+  );
 };
 
 // =====================================================
@@ -262,100 +262,100 @@ return ( <div
 // =====================================================
 
 const LoginForm = ({
-onClose,
-onLoginSuccess,
+  onClose,
+  onLoginSuccess,
 }) => {
 
-// LOGIN | REGISTER | OTP
-const [screen, setScreen] =
-useState("LOGIN");
+  // LOGIN | REGISTER | OTP
+  const [screen, setScreen] =
+    useState("LOGIN");
 
-// ===================================================
-// LOGIN DATA
-// ===================================================
+  // ===================================================
+  // LOGIN DATA
+  // ===================================================
 
-const [loginData, setLoginData] =
-useState({
-email: "",
-password: "",
-});
+  const [loginData, setLoginData] =
+    useState({
+      email: "",
+      password: "",
+    });
 
-// ===================================================
-// REGISTER DATA
-// ===================================================
+  // ===================================================
+  // REGISTER DATA
+  // ===================================================
 
-const [
-registerData,
-setRegisterData,
-] = useState({
-name: "",
-email: "",
-phone: "",
-password: "",
-confirmPassword: "",
-gender: "",
-bloodGroup: "",
-dateOfBirth: "",
-});
+  const [
+    registerData,
+    setRegisterData,
+  ] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+    bloodGroup: "",
+    dateOfBirth: "",
+  });
 
-// ===================================================
-// OTP
-// ===================================================
+  // ===================================================
+  // OTP
+  // ===================================================
 
-const [otp, setOtp] =
-useState("");
+  const [otp, setOtp] =
+    useState("");
 
-const [
-pendingLogin,
-setPendingLogin,
-] = useState(null);
+  const [
+    pendingLogin,
+    setPendingLogin,
+  ] = useState(null);
 
-// ===================================================
-// UI STATES
-// ===================================================
+  // ===================================================
+  // UI STATES
+  // ===================================================
 
-const [loading, setLoading] =
-useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
-const [error, setError] =
-useState("");
+  const [error, setError] =
+    useState("");
 
-const [message, setMessage] =
-useState("");
+  const [message, setMessage] =
+    useState("");
 
-const [seconds, setSeconds] =
-useState(0);
+  const [seconds, setSeconds] =
+    useState(0);
 
-// ===================================================
-// RESEND TIMER
-// ===================================================
+  // ===================================================
+  // RESEND TIMER
+  // ===================================================
 
-useEffect(() => {
-
-
-if (seconds <= 0) return;
-
-const timer =
-  setInterval(() => {
-
-    setSeconds(
-      (current) =>
-        current - 1
-    );
-
-  }, 1000);
-
-return () =>
-  clearInterval(timer);
+  useEffect(() => {
 
 
-}, [seconds]);
+    if (seconds <= 0) return;
 
-// ===================================================
-// INPUT STYLES
-// ===================================================
+    const timer =
+      setInterval(() => {
 
-const inputClass = `     w-full
+        setSeconds(
+          (current) =>
+            current - 1
+        );
+
+      }, 1000);
+
+    return () =>
+      clearInterval(timer);
+
+
+  }, [seconds]);
+
+  // ===================================================
+  // INPUT STYLES
+  // ===================================================
+
+  const inputClass = `     w-full
     rounded-xl
     border
     border-slate-200
@@ -371,1177 +371,1181 @@ const inputClass = `     w-full
     focus:ring-blue-100
   `;
 
-// ===================================================
-// LOGIN INPUT CHANGE
-// ===================================================
+  // ===================================================
+  // LOGIN INPUT CHANGE
+  // ===================================================
 
-const handleLoginChange = (
-e
-) => {
+  const handleLoginChange = (
+    e
+  ) => {
 
 
-const {
-  name,
-  value,
-} = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
-setLoginData((prev) => ({
-  ...prev,
-  [name]: value,
-}));
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
 
-};
+  };
 
-// ===================================================
-// REGISTER INPUT CHANGE
-// ===================================================
+  // ===================================================
+  // REGISTER INPUT CHANGE
+  // ===================================================
 
-const handleRegisterChange = (
-e
-) => {
+  const handleRegisterChange = (
+    e
+  ) => {
 
 
-const {
-  name,
-  value,
-} = e.target;
+    const {
+      name,
+      value,
+    } = e.target;
 
-setRegisterData((prev) => ({
-  ...prev,
-  [name]: value,
-}));
+    setRegisterData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
 
-};
+  };
 
-// ===================================================
-// LOGIN
-// ===================================================
+  // ===================================================
+  // LOGIN
+  // ===================================================
 
-const handleLogin = async (
-e
-) => {
+  const handleLogin = async (
+    e
+  ) => {
 
 
-e.preventDefault();
+    e.preventDefault();
 
-setError("");
-setMessage("");
-
-try {
-
-  setLoading(true);
-
-  // ===============================================
-  // STEP 1
-  // EMAIL + PASSWORD LOGIN
-  // ===============================================
-
-  const loginResponse =
-    await api.post(
-      "/auth/login",
-      {
-        email:
-          loginData.email
-            .trim()
-            .toLowerCase(),
-
-        password:
-          loginData.password,
-      }
-    );
-
-  if (
-    loginResponse.data.success ===
-    false
-  ) {
-
-    throw new Error(
-      loginResponse.data.message ||
-      "Invalid email or password"
-    );
-
-  }
-
-
-  // ===============================================
-  // SAVE LOGIN RESPONSE TEMPORARILY
-  // TOKEN OTP VERIFY KE BAAD SAVE HOGA
-  // ===============================================
-
-  setPendingLogin(
-    loginResponse.data
-  );
-
-
-  // Remove old token
-
-  localStorage.removeItem(
-    "token"
-  );
-
-  localStorage.removeItem(
-    "user"
-  );
-
-
-  // ===============================================
-  // STEP 2
-  // SEND OTP
-  // ===============================================
-
-  const otpResponse =
-    await api.post(
-      "/otp/send",
-      {
-        email:
-          loginData.email
-            .trim()
-            .toLowerCase(),
-      }
-    );
-
-
-  if (
-    otpResponse.data.success ===
-    false
-  ) {
-
-    throw new Error(
-      otpResponse.data.message ||
-      "Failed to send OTP"
-    );
-
-  }
-
-
-  // ===============================================
-  // OPEN OTP SCREEN
-  // ===============================================
-
-  setScreen("OTP");
-
-  setOtp("");
-
-  setSeconds(60);
-
-  setMessage(
-    `OTP sent to ${loginData.email}`
-  );
-
-
-} catch (err) {
-
-  console.error(
-    "LOGIN ERROR:",
-    err
-  );
-
-  setError(
-    err.response?.data?.message ||
-    err.message ||
-    "Login failed"
-  );
-
-} finally {
-
-  setLoading(false);
-
-}
-
-
-};
-
-// ===================================================
-// REGISTER
-// ===================================================
-
-const handleRegister = async (
-e
-) => {
-
-
-e.preventDefault();
-
-setError("");
-setMessage("");
-
-// ===============================================
-// VALIDATION
-// ===============================================
-
-if (
-  !registerData.name ||
-  !registerData.email ||
-  !registerData.password
-) {
-
-  setError(
-    "Please fill all required fields."
-  );
-
-  return;
-
-}
-
-
-if (
-  registerData.password !==
-  registerData.confirmPassword
-) {
-
-  setError(
-    "Passwords do not match."
-  );
-
-  return;
-
-}
-
-
-if (
-  registerData.password.length < 6
-) {
-
-  setError(
-    "Password must be at least 6 characters."
-  );
-
-  return;
-
-}
-
-
-try {
-
-  setLoading(true);
-
-  // Remove confirm password before sending
-
-  const {
-    confirmPassword,
-    ...dataToSend
-  } = registerData;
-
-
-  // ===============================================
-  // REGISTER API
-  // ===============================================
-
-  const response =
-    await api.post(
-      "/auth/register",
-      dataToSend
-    );
-
-
-  if (
-    response.data.success ===
-    false
-  ) {
-
-    throw new Error(
-      response.data.message ||
-      "Registration failed"
-    );
-
-  }
-
-
-  setMessage(
-    "Registration successful! Please login."
-  );
-
-
-  // Clear register form
-
-  setRegisterData({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    gender: "",
-    bloodGroup: "",
-    dateOfBirth: "",
-  });
-
-
-  // Email login field me automatically
-
-  setLoginData({
-    email:
-      dataToSend.email,
-    password: "",
-  });
-
-
-  // Go to login page
-
-  setTimeout(() => {
-
-    setScreen("LOGIN");
-
+    setError("");
     setMessage("");
 
-  }, 1000);
+    try {
 
+      setLoading(true);
 
-} catch (err) {
+      // ===============================================
+      // STEP 1
+      // EMAIL + PASSWORD LOGIN
+      // ===============================================
 
-  console.error(
-    "REGISTER ERROR:",
-    err
-  );
+      const loginResponse =
+        await api.post(
+          "/auth/login",
+          {
+            email:
+              loginData.email
+                .trim()
+                .toLowerCase(),
 
-  setError(
-    err.response?.data?.message ||
-    err.message ||
-    "Registration failed"
-  );
+            password:
+              loginData.password,
+          }
+        );
 
-} finally {
+      if (
+        loginResponse.data.success ===
+        false
+      ) {
 
-  setLoading(false);
+        throw new Error(
+          loginResponse.data.message ||
+          "Invalid email or password"
+        );
 
-}
-
-
-};
-
-// ===================================================
-// VERIFY OTP
-// ===================================================
-
-const handleVerifyOTP = async (
-e
-) => {
-
-
-e.preventDefault();
-
-setError("");
-setMessage("");
-
-if (
-  otp.length !== 6
-) {
-
-  setError(
-    "Please enter a valid 6 digit OTP."
-  );
-
-  return;
-
-}
-
-
-try {
-
-  setLoading(true);
-
-
-  // ===============================================
-  // VERIFY OTP API
-  // ===============================================
-
-  const response =
-    await api.post(
-      "/otp/verify",
-      {
-        email:
-          loginData.email
-            .trim()
-            .toLowerCase(),
-
-        otp,
       }
-    );
 
 
-  if (
-    response.data.success ===
-    false
-  ) {
+      // ===============================================
+      // SAVE LOGIN RESPONSE TEMPORARILY
+      // TOKEN OTP VERIFY KE BAAD SAVE HOGA
+      // ===============================================
 
-    throw new Error(
-      response.data.message ||
-      "OTP verification failed"
-    );
-
-  }
-
-
-  // ===============================================
-  // OTP VERIFIED
-  // ===============================================
-
-  const token =
-    pendingLogin?.token ||
-    pendingLogin?.data?.token;
-
-  const user =
-    pendingLogin?.user ||
-    pendingLogin?.data?.user;
-
-
-  // Save token
-
-  if (token) {
-
-    localStorage.setItem(
-      "token",
-      token
-    );
-
-  }
-
-
-  // Save user
-
-  if (user) {
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
-
-  }
-
-
-  // Update Navbar
-
-  window.dispatchEvent(
-    new Event("authChanged")
-  );
-
-
-  setMessage(
-    "OTP verified successfully!"
-  );
-
-
-  // Login Success
-
-  setTimeout(() => {
-
-    if (onLoginSuccess) {
-
-      onLoginSuccess(user);
-
-    }
-
-
-    if (onClose) {
-
-      onClose();
-
-    }
-
-  }, 500);
-
-
-} catch (err) {
-
-  console.error(
-    "OTP VERIFY ERROR:",
-    err
-  );
-
-  setError(
-    err.response?.data?.message ||
-    err.message ||
-    "Invalid OTP"
-  );
-
-} finally {
-
-  setLoading(false);
-
-}
-
-
-};
-
-// ===================================================
-// RESEND OTP
-// ===================================================
-
-const handleResendOTP =
-async () => {
-
-
-  if (
-    seconds > 0 ||
-    loading
-  ) return;
-
-
-  setError("");
-  setMessage("");
-
-
-  try {
-
-    setLoading(true);
-
-
-    const response =
-      await api.post(
-        "/otp/resend",
-        {
-          email:
-            loginData.email
-              .trim()
-              .toLowerCase(),
-        }
+      setPendingLogin(
+        loginResponse.data
       );
+
+
+      // Remove old token
+
+      localStorage.removeItem(
+        "token"
+      );
+
+      localStorage.removeItem(
+        "user"
+      );
+
+
+      // ===============================================
+      // STEP 2
+      // SEND OTP
+      // ===============================================
+
+      const otpResponse =
+        await api.post(
+          "/otp/send",
+          {
+            email:
+              loginData.email
+                .trim()
+                .toLowerCase(),
+          }
+        );
+
+
+      if (
+        otpResponse.data.success ===
+        false
+      ) {
+
+        throw new Error(
+          otpResponse.data.message ||
+          "Failed to send OTP"
+        );
+
+      }
+
+
+      // ===============================================
+      // OPEN OTP SCREEN
+      // ===============================================
+
+      setScreen("OTP");
+
+      setOtp("");
+
+      setSeconds(60);
+
+      setMessage(
+        `OTP sent to ${loginData.email}`
+      );
+
+
+    } catch (err) {
+
+      console.error(
+        "LOGIN ERROR:",
+        err
+      );
+
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+
+  };
+
+  // ===================================================
+  // REGISTER
+  // ===================================================
+
+  const handleRegister = async (
+    e
+  ) => {
+
+
+    e.preventDefault();
+
+    setError("");
+    setMessage("");
+
+    // ===============================================
+    // VALIDATION
+    // ===============================================
+
+    if (
+      !registerData.name ||
+      !registerData.email ||
+      !registerData.password
+    ) {
+
+      setError(
+        "Please fill all required fields."
+      );
+
+      return;
+
+    }
 
 
     if (
-      response.data.success ===
-      false
+      registerData.password !==
+      registerData.confirmPassword
     ) {
 
-      throw new Error(
-        response.data.message ||
-        "Failed to resend OTP"
+      setError(
+        "Passwords do not match."
       );
+
+      return;
 
     }
 
 
-    setOtp("");
+    if (
+      registerData.password.length < 6
+    ) {
 
-    setSeconds(60);
+      setError(
+        "Password must be at least 6 characters."
+      );
 
-    setMessage(
-      "New OTP sent successfully!"
-    );
+      return;
 
-
-  } catch (err) {
-
-    console.error(
-      "RESEND OTP ERROR:",
-      err
-    );
-
-    setError(
-      err.response?.data?.message ||
-      err.message ||
-      "Failed to resend OTP"
-    );
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-};
+    }
 
 
-// ===================================================
-// BACK TO LOGIN
-// ===================================================
+    try {
 
-const backToLogin = () => {
+      setLoading(true);
 
+      // Remove confirm password before sending
 
-setScreen("LOGIN");
-
-setOtp("");
-
-setError("");
-
-setMessage("");
-
-setSeconds(0);
-
-setPendingLogin(null);
+      const {
+        confirmPassword,
+        ...dataToSend
+      } = registerData;
 
 
-};
+      // ===============================================
+      // REGISTER API
+      // ===============================================
 
-// ===================================================
-// LOGIN PAGE
-// ===================================================
+      const response =
+        await api.post(
+          "/auth/register",
+          dataToSend
+        );
 
-const renderLogin = () => (
 
+      if (
+        response.data.success ===
+        false
+      ) {
 
-<form
-  onSubmit={handleLogin}
-  className="space-y-5"
->
+        throw new Error(
+          response.data.message ||
+          "Registration failed"
+        );
 
-  <div>
-
-    <label className="mb-2 block text-sm font-bold text-slate-600">
-
-      Email Address
-
-    </label>
-
-    <input
-      type="email"
-
-      name="email"
-
-      value={
-        loginData.email
       }
 
-      onChange={
-        handleLoginChange
-      }
 
-      placeholder="Enter your email"
+      setMessage(
+        "Registration successful! Please login."
+      );
 
-      required
 
-      className={inputClass}
-    />
+      // Clear register form
 
-  </div>
+      setRegisterData({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+        gender: "",
+        bloodGroup: "",
+        dateOfBirth: "",
+      });
 
 
-  <div>
+      // Email login field me automatically
 
-    <label className="mb-2 block text-sm font-bold text-slate-600">
+      setLoginData({
+        email:
+          dataToSend.email,
+        password: "",
+      });
 
-      Password
 
-    </label>
+      // Go to login page
 
-    <input
-      type="password"
-
-      name="password"
-
-      value={
-        loginData.password
-      }
-
-      onChange={
-        handleLoginChange
-      }
-
-      placeholder="Enter your password"
-
-      required
-
-      className={inputClass}
-    />
-
-  </div>
-
-
-  <button
-    type="submit"
-
-    disabled={loading}
-
-    className="
-      w-full
-      rounded-xl
-      bg-[#2f80ed]
-      py-3.5
-      font-black
-      text-white
-      shadow-lg
-      shadow-blue-200
-      transition
-      hover:bg-blue-600
-      disabled:opacity-60
-    "
-  >
-
-    {loading
-      ? "Please wait..."
-      : "Login & Send OTP"}
-
-  </button>
-
-
-  <div className="pt-3 text-center">
-
-    <p className="text-sm text-slate-500">
-
-      Don't have an account?
-
-    </p>
-
-
-    <button
-      type="button"
-
-      onClick={() => {
-
-        setScreen("REGISTER");
-
-        setError("");
-
-        setMessage("");
-
-      }}
-
-      className="
-        mt-2
-        font-bold
-        text-[#2f80ed]
-        hover:underline
-      "
-    >
-
-      Create Account
-
-    </button>
-
-  </div>
-
-</form>
-
-
-);
-
-// ===================================================
-// REGISTER PAGE
-// ===================================================
-
-const renderRegister = () => (
-
-
-<form
-  onSubmit={handleRegister}
-  className="space-y-4"
->
-
-  <div className="grid gap-4 sm:grid-cols-2">
-
-
-    {/* FULL NAME */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Full Name *
-
-      </label>
-
-      <input
-        type="text"
-
-        name="name"
-
-        value={
-          registerData.name
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        placeholder="Full name"
-
-        required
-
-        className={inputClass}
-      />
-
-    </div>
-
-
-    {/* EMAIL */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Email *
-
-      </label>
-
-      <input
-        type="email"
-
-        name="email"
-
-        value={
-          registerData.email
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        placeholder="Email address"
-
-        required
-
-        className={inputClass}
-      />
-
-    </div>
-
-
-    {/* PHONE */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Phone Number
-
-      </label>
-
-      <input
-        type="tel"
-
-        name="phone"
-
-        value={
-          registerData.phone
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        placeholder="9876543210"
-
-        maxLength="10"
-
-        className={inputClass}
-      />
-
-    </div>
-
-
-    {/* GENDER */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Gender
-
-      </label>
-
-      <select
-        name="gender"
-
-        value={
-          registerData.gender
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        className={inputClass}
-      >
-
-        <option value="">
-          Select Gender
-        </option>
-
-        <option value="Male">
-          Male
-        </option>
-
-        <option value="Female">
-          Female
-        </option>
-
-        <option value="Other">
-          Other
-        </option>
-
-      </select>
-
-    </div>
-
-
-    {/* DATE OF BIRTH */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Date of Birth
-
-      </label>
-
-      <input
-        type="date"
-
-        name="dateOfBirth"
-
-        value={
-          registerData.dateOfBirth
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        className={inputClass}
-      />
-
-    </div>
-
-
-    {/* BLOOD GROUP */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Blood Group
-
-      </label>
-
-      <select
-        name="bloodGroup"
-
-        value={
-          registerData.bloodGroup
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        className={inputClass}
-      >
-
-        <option value="">
-          Select Blood Group
-        </option>
-
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-
-      </select>
-
-    </div>
-
-
-    {/* PASSWORD */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Password *
-
-      </label>
-
-      <input
-        type="password"
-
-        name="password"
-
-        value={
-          registerData.password
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        placeholder="Minimum 6 characters"
-
-        required
-
-        className={inputClass}
-      />
-
-    </div>
-
-
-    {/* CONFIRM PASSWORD */}
-
-    <div>
-
-      <label className="mb-2 block text-sm font-bold text-slate-600">
-
-        Confirm Password *
-
-      </label>
-
-      <input
-        type="password"
-
-        name="confirmPassword"
-
-        value={
-          registerData.confirmPassword
-        }
-
-        onChange={
-          handleRegisterChange
-        }
-
-        placeholder="Confirm password"
-
-        required
-
-        className={inputClass}
-      />
-
-    </div>
-
-  </div>
-
-
-  <button
-    type="submit"
-
-    disabled={loading}
-
-    className="
-      w-full
-      rounded-xl
-      bg-[#2f80ed]
-      py-3.5
-      font-black
-      text-white
-      shadow-lg
-      shadow-blue-200
-      transition
-      hover:bg-blue-600
-      disabled:opacity-60
-    "
-  >
-
-    {loading
-      ? "Creating Account..."
-      : "Create Account"}
-
-  </button>
-
-
-  <div className="pt-2 text-center">
-
-    <p className="text-sm text-slate-500">
-
-      Already have an account?
-
-    </p>
-
-
-    <button
-      type="button"
-
-      onClick={() => {
+      setTimeout(() => {
 
         setScreen("LOGIN");
 
-        setError("");
-
         setMessage("");
 
-      }}
+      }, 1000);
 
-      className="
+
+    } catch (err) {
+
+      console.error(
+        "REGISTER ERROR:",
+        err
+      );
+
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Registration failed"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+
+  };
+
+  // ===================================================
+  // VERIFY OTP
+  // ===================================================
+
+  const handleVerifyOTP = async (
+    e
+  ) => {
+
+
+    e.preventDefault();
+
+    setError("");
+    setMessage("");
+
+    if (
+      otp.length !== 6
+    ) {
+
+      setError(
+        "Please enter a valid 6 digit OTP."
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      setLoading(true);
+
+
+      // ===============================================
+      // VERIFY OTP API
+      // ===============================================
+
+      const response =
+        await api.post(
+          "/otp/verify",
+          {
+            email:
+              loginData.email
+                .trim()
+                .toLowerCase(),
+
+            otp,
+          }
+        );
+
+
+      if (
+        response.data.success ===
+        false
+      ) {
+
+        throw new Error(
+          response.data.message ||
+          "OTP verification failed"
+        );
+
+      }
+
+
+      // ===============================================
+      // OTP VERIFIED
+      // ===============================================
+
+      const token =
+        pendingLogin?.token ||
+        pendingLogin?.data?.token;
+
+      const user =
+        pendingLogin?.user ||
+        pendingLogin?.data?.user;
+
+
+      // Save token
+
+      const isJWT = (value) => typeof value === "string" && value.split(".").length === 3 && value.length > 20;
+
+      ["token", "authToken", "accessToken", "jwtToken"].forEach((key) => {
+        localStorage.removeItem(key);
+      });
+
+      if (isJWT(token)) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("accessToken", token);
+        localStorage.setItem("jwtToken", token);
+      }
+
+
+      // Save user
+
+      if (user) {
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(user)
+        );
+
+      }
+
+
+      // Update Navbar
+
+      window.dispatchEvent(
+        new Event("authChanged")
+      );
+
+
+      setMessage(
+        "OTP verified successfully!"
+      );
+
+
+      // Login Success
+
+      setTimeout(() => {
+
+        if (onLoginSuccess) {
+
+          onLoginSuccess(user);
+
+        }
+
+
+        if (onClose) {
+
+          onClose();
+
+        }
+
+      }, 500);
+
+
+    } catch (err) {
+
+      console.error(
+        "OTP VERIFY ERROR:",
+        err
+      );
+
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Invalid OTP"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+
+  };
+
+  // ===================================================
+  // RESEND OTP
+  // ===================================================
+
+  const handleResendOTP =
+    async () => {
+
+
+      if (
+        seconds > 0 ||
+        loading
+      ) return;
+
+
+      setError("");
+      setMessage("");
+
+
+      try {
+
+        setLoading(true);
+
+
+        const response =
+          await api.post(
+            "/otp/resend",
+            {
+              email:
+                loginData.email
+                  .trim()
+                  .toLowerCase(),
+            }
+          );
+
+
+        if (
+          response.data.success ===
+          false
+        ) {
+
+          throw new Error(
+            response.data.message ||
+            "Failed to resend OTP"
+          );
+
+        }
+
+
+        setOtp("");
+
+        setSeconds(60);
+
+        setMessage(
+          "New OTP sent successfully!"
+        );
+
+
+      } catch (err) {
+
+        console.error(
+          "RESEND OTP ERROR:",
+          err
+        );
+
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          "Failed to resend OTP"
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+  // ===================================================
+  // BACK TO LOGIN
+  // ===================================================
+
+  const backToLogin = () => {
+
+
+    setScreen("LOGIN");
+
+    setOtp("");
+
+    setError("");
+
+    setMessage("");
+
+    setSeconds(0);
+
+    setPendingLogin(null);
+
+
+  };
+
+  // ===================================================
+  // LOGIN PAGE
+  // ===================================================
+
+  const renderLogin = () => (
+
+
+    <form
+      onSubmit={handleLogin}
+      className="space-y-5"
+    >
+
+      <div>
+
+        <label className="mb-2 block text-sm font-bold text-slate-600">
+
+          Email Address
+
+        </label>
+
+        <input
+          type="email"
+
+          name="email"
+
+          value={
+            loginData.email
+          }
+
+          onChange={
+            handleLoginChange
+          }
+
+          placeholder="Enter your email"
+
+          required
+
+          className={inputClass}
+        />
+
+      </div>
+
+
+      <div>
+
+        <label className="mb-2 block text-sm font-bold text-slate-600">
+
+          Password
+
+        </label>
+
+        <input
+          type="password"
+
+          name="password"
+
+          value={
+            loginData.password
+          }
+
+          onChange={
+            handleLoginChange
+          }
+
+          placeholder="Enter your password"
+
+          required
+
+          className={inputClass}
+        />
+
+      </div>
+
+
+      <button
+        type="submit"
+
+        disabled={loading}
+
+        className="
+      w-full
+      rounded-xl
+      bg-[#2f80ed]
+      py-3.5
+      font-black
+      text-white
+      shadow-lg
+      shadow-blue-200
+      transition
+      hover:bg-blue-600
+      disabled:opacity-60
+    "
+      >
+
+        {loading
+          ? "Please wait..."
+          : "Login & Send OTP"}
+
+      </button>
+
+
+      <div className="pt-3 text-center">
+
+        <p className="text-sm text-slate-500">
+
+          Don't have an account?
+
+        </p>
+
+
+        <button
+          type="button"
+
+          onClick={() => {
+
+            setScreen("REGISTER");
+
+            setError("");
+
+            setMessage("");
+
+          }}
+
+          className="
         mt-2
         font-bold
         text-[#2f80ed]
         hover:underline
       "
+        >
+
+          Create Account
+
+        </button>
+
+      </div>
+
+    </form>
+
+
+  );
+
+  // ===================================================
+  // REGISTER PAGE
+  // ===================================================
+
+  const renderRegister = () => (
+
+
+    <form
+      onSubmit={handleRegister}
+      className="space-y-4"
     >
 
-      Login Here
-
-    </button>
-
-  </div>
-
-</form>
+      <div className="grid gap-4 sm:grid-cols-2">
 
 
-);
+        {/* FULL NAME */}
 
-// ===================================================
-// OTP PAGE
-// ===================================================
+        <div>
 
-const renderOTP = () => (
+          <label className="mb-2 block text-sm font-bold text-slate-600">
 
+            Full Name *
 
-<form
-  onSubmit={handleVerifyOTP}
-  className="space-y-6"
->
+          </label>
 
-  <div className="text-center">
+          <input
+            type="text"
 
-    <div className="mb-4 text-5xl">
+            name="name"
 
-      🔐
+            value={
+              registerData.name
+            }
 
-    </div>
+            onChange={
+              handleRegisterChange
+            }
 
-    <p className="text-sm text-slate-500">
+            placeholder="Full name"
 
-      We sent a verification code to
+            required
 
-    </p>
+            className={inputClass}
+          />
 
-    <p className="mt-2 break-all font-bold text-[#2f80ed]">
-
-      {loginData.email}
-
-    </p>
-
-  </div>
+        </div>
 
 
-  <div>
+        {/* EMAIL */}
 
-    <label className="mb-2 block text-sm font-bold text-slate-600">
+        <div>
 
-      Enter 6 Digit OTP
+          <label className="mb-2 block text-sm font-bold text-slate-600">
 
-    </label>
+            Email *
 
-    <input
-      type="text"
+          </label>
 
-      inputMode="numeric"
+          <input
+            type="email"
 
-      autoComplete="one-time-code"
+            name="email"
 
-      maxLength={6}
+            value={
+              registerData.email
+            }
 
-      value={otp}
+            onChange={
+              handleRegisterChange
+            }
 
-      onChange={(e) => {
+            placeholder="Email address"
 
-        const value =
-          e.target.value.replace(
-            /\D/g,
-            ""
-          );
+            required
 
-        setOtp(value);
+            className={inputClass}
+          />
 
-      }}
+        </div>
 
-      placeholder="000000"
 
-      className="
+        {/* PHONE */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Phone Number
+
+          </label>
+
+          <input
+            type="tel"
+
+            name="phone"
+
+            value={
+              registerData.phone
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            placeholder="9876543210"
+
+            maxLength="10"
+
+            className={inputClass}
+          />
+
+        </div>
+
+
+        {/* GENDER */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Gender
+
+          </label>
+
+          <select
+            name="gender"
+
+            value={
+              registerData.gender
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            className={inputClass}
+          >
+
+            <option value="">
+              Select Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+
+        {/* DATE OF BIRTH */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Date of Birth
+
+          </label>
+
+          <input
+            type="date"
+
+            name="dateOfBirth"
+
+            value={
+              registerData.dateOfBirth
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            className={inputClass}
+          />
+
+        </div>
+
+
+        {/* BLOOD GROUP */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Blood Group
+
+          </label>
+
+          <select
+            name="bloodGroup"
+
+            value={
+              registerData.bloodGroup
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            className={inputClass}
+          >
+
+            <option value="">
+              Select Blood Group
+            </option>
+
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+
+          </select>
+
+        </div>
+
+
+        {/* PASSWORD */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Password *
+
+          </label>
+
+          <input
+            type="password"
+
+            name="password"
+
+            value={
+              registerData.password
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            placeholder="Minimum 6 characters"
+
+            required
+
+            className={inputClass}
+          />
+
+        </div>
+
+
+        {/* CONFIRM PASSWORD */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-bold text-slate-600">
+
+            Confirm Password *
+
+          </label>
+
+          <input
+            type="password"
+
+            name="confirmPassword"
+
+            value={
+              registerData.confirmPassword
+            }
+
+            onChange={
+              handleRegisterChange
+            }
+
+            placeholder="Confirm password"
+
+            required
+
+            className={inputClass}
+          />
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+
+        disabled={loading}
+
+        className="
+      w-full
+      rounded-xl
+      bg-[#2f80ed]
+      py-3.5
+      font-black
+      text-white
+      shadow-lg
+      shadow-blue-200
+      transition
+      hover:bg-blue-600
+      disabled:opacity-60
+    "
+      >
+
+        {loading
+          ? "Creating Account..."
+          : "Create Account"}
+
+      </button>
+
+
+      <div className="pt-2 text-center">
+
+        <p className="text-sm text-slate-500">
+
+          Already have an account?
+
+        </p>
+
+
+        <button
+          type="button"
+
+          onClick={() => {
+
+            setScreen("LOGIN");
+
+            setError("");
+
+            setMessage("");
+
+          }}
+
+          className="
+        mt-2
+        font-bold
+        text-[#2f80ed]
+        hover:underline
+      "
+        >
+
+          Login Here
+
+        </button>
+
+      </div>
+
+    </form>
+
+
+  );
+
+  // ===================================================
+  // OTP PAGE
+  // ===================================================
+
+  const renderOTP = () => (
+
+
+    <form
+      onSubmit={handleVerifyOTP}
+      className="space-y-6"
+    >
+
+      <div className="text-center">
+
+        <div className="mb-4 text-5xl">
+
+          🔐
+
+        </div>
+
+        <p className="text-sm text-slate-500">
+
+          We sent a verification code to
+
+        </p>
+
+        <p className="mt-2 break-all font-bold text-[#2f80ed]">
+
+          {loginData.email}
+
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <label className="mb-2 block text-sm font-bold text-slate-600">
+
+          Enter 6 Digit OTP
+
+        </label>
+
+        <input
+          type="text"
+
+          inputMode="numeric"
+
+          autoComplete="one-time-code"
+
+          maxLength={6}
+
+          value={otp}
+
+          onChange={(e) => {
+
+            const value =
+              e.target.value.replace(
+                /\D/g,
+                ""
+              );
+
+            setOtp(value);
+
+          }}
+
+          placeholder="000000"
+
+          className="
         w-full
         rounded-xl
         border
@@ -1559,20 +1563,20 @@ const renderOTP = () => (
         focus:ring-2
         focus:ring-blue-100
       "
-    />
+        />
 
-  </div>
+      </div>
 
 
-  <button
-    type="submit"
+      <button
+        type="submit"
 
-    disabled={
-      loading ||
-      otp.length !== 6
-    }
+        disabled={
+          loading ||
+          otp.length !== 6
+        }
 
-    className="
+        className="
       w-full
       rounded-xl
       bg-[#2f80ed]
@@ -1585,103 +1589,102 @@ const renderOTP = () => (
       hover:bg-blue-600
       disabled:opacity-60
     "
-  >
+      >
 
-    {loading
-      ? "Verifying..."
-      : "Verify OTP"}
+        {loading
+          ? "Verifying..."
+          : "Verify OTP"}
 
-  </button>
+      </button>
 
 
-  {/* RESEND */}
+      {/* RESEND */}
 
-  <div className="text-center">
+      <div className="text-center">
 
-    <button
-      type="button"
+        <button
+          type="button"
 
-      onClick={
-        handleResendOTP
-      }
+          onClick={
+            handleResendOTP
+          }
 
-      disabled={
-        seconds > 0 ||
-        loading
-      }
+          disabled={
+            seconds > 0 ||
+            loading
+          }
 
-      className={`
+          className={`
         font-bold
         transition
 
-        ${
-          seconds > 0
-            ? "cursor-not-allowed text-slate-400"
-            : "text-[#2f80ed] hover:underline"
-        }
+        ${seconds > 0
+              ? "cursor-not-allowed text-slate-400"
+              : "text-[#2f80ed] hover:underline"
+            }
       `}
-    >
+        >
 
-      {seconds > 0
-        ? `Resend OTP in ${seconds}s`
-        : "Resend OTP"}
+          {seconds > 0
+            ? `Resend OTP in ${seconds}s`
+            : "Resend OTP"}
 
-    </button>
+        </button>
 
-  </div>
+      </div>
 
 
-  {/* BACK */}
+      {/* BACK */}
 
-  <button
-    type="button"
+      <button
+        type="button"
 
-    onClick={backToLogin}
+        onClick={backToLogin}
 
-    className="
+        className="
       w-full
       text-sm
       font-bold
       text-slate-500
       hover:text-[#2f80ed]
     "
-  >
+      >
 
-    ← Change Login Details
+        ← Change Login Details
 
-  </button>
+      </button>
 
-</form>
-
-
-);
-
-// ===================================================
-// MAIN UI
-// ===================================================
-
-return (
+    </form>
 
 
-<div
-  className="
+  );
+
+  // ===================================================
+  // MAIN UI
+  // ===================================================
+
+  return (
+
+
+    <div
+      className="
     fixed
     inset-0
     z-[9999]
     overflow-hidden
     bg-[#071a33]
   "
->
+    >
 
-  {/* 3D BACKGROUND */}
+      {/* 3D BACKGROUND */}
 
-  <AuthBackground3D />
+      <AuthBackground3D />
 
 
-  {/* DARK OVERLAY */}
+      {/* DARK OVERLAY */}
 
-  <div
-    className="
+      <div
+        className="
       absolute
       inset-0
       bg-gradient-to-br
@@ -1689,13 +1692,13 @@ return (
       via-[#0b2545]/70
       to-[#2f80ed]/20
     "
-  />
+      />
 
 
-  {/* CONTENT */}
+      {/* CONTENT */}
 
-  <div
-    className="
+      <div
+        className="
       relative
       z-10
       flex
@@ -1705,10 +1708,10 @@ return (
       overflow-y-auto
       p-4
     "
-  >
+      >
 
-    <div
-      className={`
+        <div
+          className={`
         relative
         w-full
         overflow-hidden
@@ -1717,22 +1720,21 @@ return (
         shadow-2xl
         transition-all
 
-        ${
-          screen === "REGISTER"
-            ? "max-w-2xl"
-            : "max-w-md"
-        }
+        ${screen === "REGISTER"
+              ? "max-w-2xl"
+              : "max-w-md"
+            }
       `}
-    >
+        >
 
-      {/* CLOSE */}
+          {/* CLOSE */}
 
-      <button
-        type="button"
+          <button
+            type="button"
 
-        onClick={onClose}
+            onClick={onClose}
 
-        className="
+            className="
           absolute
           right-5
           top-5
@@ -1751,17 +1753,17 @@ return (
           transition
           hover:bg-red-500
         "
-      >
+          >
 
-        ✕
+            ✕
 
-      </button>
+          </button>
 
 
-      {/* HEADER */}
+          {/* HEADER */}
 
-      <div
-        className="
+          <div
+            className="
           bg-gradient-to-r
           from-[#1e2a3a]
           via-[#24456d]
@@ -1771,60 +1773,60 @@ return (
           text-center
           text-white
         "
-      >
+          >
 
-        <div className="mb-2 text-4xl">
+            <div className="mb-2 text-4xl">
 
-          {screen === "LOGIN"
-            ? "🏥"
-            : screen === "REGISTER"
-            ? "🩺"
-            : "🔐"}
+              {screen === "LOGIN"
+                ? "🏥"
+                : screen === "REGISTER"
+                  ? "🩺"
+                  : "🔐"}
 
-        </div>
-
-
-        <h1 className="text-2xl font-black">
-
-          {screen === "LOGIN"
-            ? "Abhimanyu Login"
-            : screen === "REGISTER"
-            ? "Create Account"
-            : "Verify OTP"}
-
-        </h1>
+            </div>
 
 
-        <p className="mt-2 text-sm text-blue-100">
+            <h1 className="text-2xl font-black">
 
-          {screen === "LOGIN"
-            ? "Login to your healthcare account"
-            : screen === "REGISTER"
-            ? "Join Abhimanyu Healthcare"
-            : "Secure your account with OTP"}
+              {screen === "LOGIN"
+                ? "Abhimanyu Login"
+                : screen === "REGISTER"
+                  ? "Create Account"
+                  : "Verify OTP"}
 
-        </p>
-
-      </div>
+            </h1>
 
 
-      {/* FORM AREA */}
+            <p className="mt-2 text-sm text-blue-100">
 
-      <div
-        className="
+              {screen === "LOGIN"
+                ? "Login to your healthcare account"
+                : screen === "REGISTER"
+                  ? "Join Abhimanyu Healthcare"
+                  : "Secure your account with OTP"}
+
+            </p>
+
+          </div>
+
+
+          {/* FORM AREA */}
+
+          <div
+            className="
           max-h-[75vh]
           overflow-y-auto
           p-6
           sm:p-8
         "
-      >
+          >
 
-        {/* ERROR */}
+            {/* ERROR */}
 
-        {error && (
+            {error && (
 
-          <div
-            className="
+              <div
+                className="
               mb-5
               rounded-xl
               border
@@ -1835,21 +1837,21 @@ return (
               font-semibold
               text-red-600
             "
-          >
+              >
 
-            ⚠️ {error}
+                ⚠️ {error}
 
-          </div>
+              </div>
 
-        )}
+            )}
 
 
-        {/* SUCCESS */}
+            {/* SUCCESS */}
 
-        {message && (
+            {message && (
 
-          <div
-            className="
+              <div
+                className="
               mb-5
               rounded-xl
               border
@@ -1860,36 +1862,36 @@ return (
               font-semibold
               text-green-600
             "
-          >
+              >
 
-            ✅ {message}
+                ✅ {message}
+
+              </div>
+
+            )}
+
+
+            {/* RENDER SCREEN */}
+
+            {screen === "LOGIN" &&
+              renderLogin()}
+
+            {screen === "REGISTER" &&
+              renderRegister()}
+
+            {screen === "OTP" &&
+              renderOTP()}
 
           </div>
 
-        )}
-
-
-        {/* RENDER SCREEN */}
-
-        {screen === "LOGIN" &&
-          renderLogin()}
-
-        {screen === "REGISTER" &&
-          renderRegister()}
-
-        {screen === "OTP" &&
-          renderOTP()}
+        </div>
 
       </div>
 
     </div>
 
-  </div>
 
-</div>
-
-
-);
+  );
 
 };
 
