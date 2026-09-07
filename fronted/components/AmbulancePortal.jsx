@@ -185,7 +185,7 @@ const AmbulancePortal = ({ onBack, lang = Language.EN }) => {
                   <div className="text-3xl">🏥</div>
                   <div className="flex-1">
                     <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest">{ambT.nearestHub}</p>
-                    <p className="text-sm font-black dark:text-white">Pulse Emergency Hub & Blood Reserve - Zone 4</p>
+                    <p className="text-sm font-black dark:text-white">Abhimanyu Emergency Hub & Blood Reserve - Zone 4</p>
                   </div>
                 </div>
               </div>

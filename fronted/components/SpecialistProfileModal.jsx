@@ -111,7 +111,7 @@ const SpecialistProfileModal = ({ specialist, lang = Language.EN, onClose, onPro
             <p className="text-xs font-medium text-slate-600 dark:text-slate-400 leading-relaxed italic text-center">
               {isHindi
                 ? '"यह चिकित्सक आयुष्मान और MCI दिशानिर्देशों के अनुसार पूर्ण सत्यापन और योग्यता जांच के बाद नेटवर्क में शामिल किया गया है।"'
-                : '"This professional is part of the Pulseplus clinical network, having undergone rigorous identity and qualification screening as per MCI guidelines."'
+                : '"This professional is part of the Abhimanyu clinical network, having undergone rigorous identity and qualification screening as per MCI guidelines."'
               }
             </p>
           </div>

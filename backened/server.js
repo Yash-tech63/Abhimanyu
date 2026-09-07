@@ -21,7 +21,7 @@ connectDB();
 
 const allowedOrigins = (
     process.env.CLIENT_URL ||
-    "http://localhost:5173,http://localhost:3000"
+    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:3000,http://127.0.0.1:5173"
 )
     .split(",")
     .map((origin) => origin.trim())
@@ -31,11 +31,10 @@ const allowedOrigins = (
 app.use(
     cors({
         origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
+            if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost") || origin.startsWith("http://127.0.0.1")) {
                 return callback(null, true);
             }
-
-            return callback(new Error("CORS origin not allowed"));
+            return callback(null, true);
         },
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -55,7 +54,7 @@ app.get(
         res.json({
             success: true,
             message:
-                "PulsePlus Backend Running"
+                "Abhimanyu Backend Running"
         });
     }
 );

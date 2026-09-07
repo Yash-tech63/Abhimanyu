@@ -57,10 +57,9 @@ const StoreSection = ({ onNavigate, lang = Language.EN, cart = [], onAddToCart, 
                         <button onClick={() => onNavigate?.(AppView.AMBULANCE)} className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-3xl font-black text-[10px] uppercase tracking-widest shadow-xl transition-all cursor-pointer">{storeT.emergencySos || 'Emergency SOS'}</button>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
                     {[
                         { label: storeT.buyMeds || 'Buy Meds', icon: '💊', color: 'bg-blue-500/20', view: AppView.STORE },
-                        { label: storeT.sellGear || 'Sell Gear', icon: '📸', color: 'bg-green-500/20', view: AppView.SCANNER },
                         { label: storeT.rentEquipment || 'Rent Equipment', icon: '🦽', color: 'bg-orange-500/20', view: AppView.EQUIPMENT_PORTAL },
                         { label: storeT.donations || 'Donations', icon: '🤝', color: 'bg-purple-500/20', view: AppView.EQUIPMENT_PORTAL }
                     ].map(hub => <div key={hub.label} onClick={() => onNavigate?.(hub.view)} className={`${hub.color} p-6 rounded-[2.5rem] border border-white/5 hover:bg-white/10 cursor-pointer transition-all flex items-center gap-4 group active:scale-95`}><span className="text-3xl group-hover:rotate-12 transition-transform">{hub.icon}</span><span className="text-[10px] font-black uppercase tracking-widest">{hub.label}</span></div>)}

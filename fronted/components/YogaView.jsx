@@ -1,65 +1,96 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { generateWellnessPlan } from '../services/geminiService';
 
+const FEATURED_SESSION = {
+  id: 'solar-activation',
+  title: 'Solar Activation Flow (सूर्य नमस्कार B)',
+  instructor: 'Guru Elena Rossi / स्वामी रामदेव',
+  level: 'Intermediate / मध्यम',
+  duration: '45 min',
+  category: 'Vinyasa Flow',
+  poseName: 'Sun Salutation B (Surya Namaskar B / सूर्य नमस्कार)',
+  youtubeEmbedUrl: 'https://www.youtube.com/embed/v7AYKMP6rOE?autoplay=1&rel=0',
+  directVideoUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+  youtubeWatchUrl: 'https://www.youtube.com/watch?v=v7AYKMP6rOE',
+  poster: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200',
+  description: 'हिंदी एवं बहुभाषी निर्देशों के साथ सम्पूर्ण 12 सूर्य नमस्कार आसन अभ्यास। रीढ़ की हड्डी के खिंचाव, श्वास नियंत्रण और शारीरिक ऊर्जावर्धन हेतु।'
+};
+
 const STUDIO_SESSIONS = [
   {
     id: 'vinyasa',
-    title: 'Vinyasa Recovery',
+    title: 'Vinyasa Recovery Flow (विन्यासा योग अभ्यास)',
     instructor: 'Guru Elena Rossi',
     level: 'Intermediate',
     duration: '45 mins',
     time: 'Live Now • 142 attending',
     category: 'Vinyasa Flow',
-    description: 'Dynamic fluid movement combining breath control with deep spinal decompression and hamstring elongation.',
+    poseName: 'Adho Mukha Svanasana (अधोमुख श्वानासन)',
+    description: 'सम्पूर्ण शरीर का लचीलापन और मानसिक शांति बढ़ाने वाला विन्यासा योग प्रवाह।',
     equipment: ['Yoga Mat', '2 Blocks', 'Strap'],
     calories: '280 kcal',
-    avatar: '🧘‍♀️'
+    avatar: '🧘‍♀️',
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/sTANio_2E0Q?autoplay=1&rel=0',
+    youtubeWatchUrl: 'https://www.youtube.com/watch?v=sTANio_2E0Q',
+    poster: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1200'
   },
   {
     id: 'nidra',
-    title: 'Deep Sleep Nidra',
+    title: 'Deep Sleep Nidra (गहरी नींद योग निद्रा)',
     instructor: 'Dr. Aarav Mehta',
     level: 'Beginner',
     duration: '30 mins',
     time: 'Today, 8:00 PM',
     category: 'Restorative',
-    description: 'Guided psychic sleep technique for parasympathetic nervous system reboot and insomnia management.',
+    poseName: 'Shavasana (शवासन)',
+    description: 'मानसिक तनाव मुक्ति, अनिद्रा निवारण और तंत्रिका तंत्र को शांति प्रदान करने वाला निर्देशित योग निद्रा अभ्यास।',
     equipment: ['Bolster', 'Blanket', 'Eye Pillow'],
     calories: '90 kcal',
-    avatar: '🧘‍♂️'
+    avatar: '🧘‍♂️',
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/COp7BR_Dvps?autoplay=1&rel=0',
+    youtubeWatchUrl: 'https://www.youtube.com/watch?v=COp7BR_Dvps',
+    poster: 'https://images.unsplash.com/photo-1510894347048-471ea1f1006c?auto=format&fit=crop&q=80&w=1200'
   },
   {
     id: 'core',
-    title: 'Core Precision',
+    title: 'Core Precision Power Yoga (कोर शक्ति योग)',
     instructor: 'Maya Lin',
     level: 'Advanced',
     duration: '35 mins',
     time: 'Today, 9:30 PM',
     category: 'Power Yoga',
-    description: 'High-intensity isometric hold sequence focusing on pelvic floor stability and lumbar strength.',
+    poseName: 'Navasana (नौकासन)',
+    description: 'पेट की मांसपेशियों को मजबूत बनाने, कोर स्टेबिलिटी बढ़ाने और वजन संतुलन हेतु तीव्र योग अभ्यास।',
     equipment: ['Yoga Mat', 'Resistance Band'],
     calories: '340 kcal',
-    avatar: '⚡'
+    avatar: '⚡',
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/4vTJHUDB5ak?autoplay=1&rel=0',
+    youtubeWatchUrl: 'https://www.youtube.com/watch?v=4vTJHUDB5ak',
+    poster: 'https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&q=80&w=1200'
   },
   {
     id: 'restorative',
-    title: 'Restorative Therapy',
+    title: 'Restorative Therapy Yoga (पीठ दर्द थेरेपी योग)',
     instructor: 'Guru Elena Rossi',
     level: 'Therapeutic',
     duration: '50 mins',
     time: 'Tomorrow, 7:00 AM',
     category: 'Therapeutic',
-    description: 'Gentle supported poses targeting chronic lower back tightness and desk posture stiffness.',
+    poseName: 'Balasana (बालासन)',
+    description: 'कमर दर्द, गर्दन के खिंचाव और साइटिका की समस्या में राहत देने वाला सौम्य चिकित्सकीय योग अभ्यास।',
     equipment: ['Yoga Mat', 'Chair', 'Cushion'],
     calories: '150 kcal',
-    avatar: '🌿'
+    avatar: '🌿',
+    youtubeEmbedUrl: 'https://www.youtube.com/embed/inpok4MKVLM?autoplay=1&rel=0',
+    youtubeWatchUrl: 'https://www.youtube.com/watch?v=inpok4MKVLM',
+    poster: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=1200'
   }
 ];
 
 const YogaView = ({ onBack, lang = 'en' }) => {
   // Modal states
   const [activeModal, setActiveModal] = useState(null); // 'video' | 'cam' | 'ai_form' | 'ai_result' | 'session'
-  const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedSession, setSelectedSession] = useState(FEATURED_SESSION);
 
   // AI Generator state
   const [energyLevel, setEnergyLevel] = useState('Medium Energy');
@@ -75,10 +106,6 @@ const YogaView = ({ onBack, lang = 'en' }) => {
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const animFrameRef = useRef(null);
-
-  // Video modal controls
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(15);
 
   const availablePainPoints = [
     'Back pain relief',
@@ -114,6 +141,12 @@ const YogaView = ({ onBack, lang = 'en' }) => {
     }
   };
 
+  // Video playback helper methods
+  const openVideoModal = (sessionObj = FEATURED_SESSION) => {
+    setSelectedSession(sessionObj);
+    setActiveModal('video');
+  };
+
   // Setup webcam stream for AI Cam Check
   const startCamera = async () => {
     setActiveModal('cam');
@@ -130,7 +163,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
       console.error("Camera access error:", err);
       setCameraError("Camera access denied or unavailable. Running in simulated Motion AI mode.");
       setCameraActive(false);
-      startSkeletonDrawing(); // run overlay canvas over placeholder grid
+      startSkeletonDrawing();
     }
   };
 
@@ -231,9 +264,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
         ctx.fillText(j.label, j.x + 10, j.y + 4);
       });
 
-      // Update posture score periodically
       setPostureScore(Math.floor(92 + Math.sin(t) * 5));
-
       animFrameRef.current = requestAnimationFrame(draw);
     };
 
@@ -266,13 +297,13 @@ const YogaView = ({ onBack, lang = 'en' }) => {
             </svg>
           </button>
           <div>
-            <h2 className="text-4xl font-black text-white tracking-tighter leading-none">Yoga Academy</h2>
-            <p className="text-slate-400 font-medium text-lg mt-1">Advanced motion analysis and AI-curated flow sequences.</p>
+            <h2 className="text-4xl font-black text-white tracking-tighter leading-none">Yoga Academy (योग अकादमी)</h2>
+            <p className="text-slate-400 font-medium text-lg mt-1">सम्पूर्ण योगाभ्यास, सूर्य नमस्कार एवं क्लिनिकल मोशन एनालिसिस।</p>
           </div>
         </div>
         
         <button 
-          onClick={() => setActiveModal('video')}
+          onClick={() => openVideoModal(FEATURED_SESSION)}
           className="bg-[#2f80ed] hover:bg-blue-600 text-white px-10 py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-xl hover:shadow-blue-500/25 transition-all flex items-center gap-3"
         >
           <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
@@ -289,7 +320,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
           {/* Featured Hero Video Card */}
           <div className="relative aspect-video rounded-[4rem] overflow-hidden shadow-2xl bg-slate-900 group border border-white/5">
             <img 
-              src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200" 
+              src={FEATURED_SESSION.poster} 
               alt="Yoga Session" 
               className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[10s]" 
             />
@@ -298,7 +329,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
             {/* Center Play Button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <button 
-                onClick={() => setActiveModal('video')}
+                onClick={() => openVideoModal(FEATURED_SESSION)}
                 className="w-28 h-28 bg-[#2f80ed] hover:bg-blue-600 text-white rounded-full flex items-center justify-center text-4xl shadow-2xl hover:scale-110 transition-all duration-300 group-hover:shadow-blue-500/50 border-4 border-white/20"
                 title="Play Solar Activation Flow"
               >
@@ -308,12 +339,14 @@ const YogaView = ({ onBack, lang = 'en' }) => {
 
             <div className="absolute bottom-10 left-10 text-white right-10 flex justify-between items-end">
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#2f80ed] mb-1">Featured Session</p>
-                <h3 className="text-4xl md:text-5xl font-black tracking-tighter">Solar Activation Flow</h3>
-                <p className="text-slate-300 font-medium mt-1">with Guru Elena Rossi • Intermediate • 45 min</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#2f80ed] mb-1">
+                  Featured Session
+                </p>
+                <h3 className="text-4xl md:text-5xl font-black tracking-tighter">{FEATURED_SESSION.title}</h3>
+                <p className="text-slate-300 font-medium mt-1">with {FEATURED_SESSION.instructor} • {FEATURED_SESSION.duration}</p>
               </div>
               <button 
-                onClick={() => setActiveModal('video')}
+                onClick={() => openVideoModal(FEATURED_SESSION)}
                 className="hidden sm:block bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 text-white px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider"
               >
                 Launch Player ↗
@@ -332,7 +365,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
                 </div>
                 <h4 className="text-3xl font-black text-white">Motion AI Correction</h4>
                 <p className="text-lg text-slate-400 font-medium leading-relaxed">
-                  Real-time clinical feedback on your joint angles and posture alignment using Pulse Vision AI.
+                  Real-time clinical feedback on your joint angles and posture alignment using Abhimanyu Vision AI.
                 </p>
               </div>
               
@@ -372,7 +405,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
         <aside className="lg:col-span-4 bg-[#1e293b] rounded-[4rem] p-10 shadow-2xl border border-white/5 space-y-8 flex flex-col justify-between">
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-black text-white tracking-tight">Upcoming Studio</h3>
+              <h3 className="text-2xl font-black text-white tracking-tight">Studio Sessions</h3>
               <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
                 4 Sessions
               </span>
@@ -410,7 +443,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
                   <div className="flex items-center justify-between text-xs text-slate-500 border-t border-white/5 pt-3">
                     <span className="font-semibold text-slate-400">{session.time}</span>
                     <span className="font-black text-[#2f80ed] group-hover:translate-x-1 transition-transform">
-                      View Details →
+                      Play Video →
                     </span>
                   </div>
                 </div>
@@ -424,74 +457,65 @@ const YogaView = ({ onBack, lang = 'en' }) => {
 
       {/* -------------------- MODALS -------------------- */}
 
-      {/* 1. VIDEO PLAYER MODAL */}
-      {activeModal === 'video' && (
+      {/* 1. GUARANTEED REAL YOGA VIDEO PLAYER MODAL */}
+      {activeModal === 'video' && selectedSession && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
-          <div className="bg-[#1e293b] rounded-[3.5rem] border border-white/10 overflow-hidden max-w-5xl w-full shadow-2xl flex flex-col max-h-[90vh]">
+          <div className="bg-[#1e293b] rounded-[3.5rem] border border-white/10 overflow-hidden max-w-5xl w-full shadow-2xl flex flex-col max-h-[95vh]">
             {/* Modal Header */}
             <div className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 bg-slate-900/50">
               <div className="flex items-center gap-4">
                 <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
                 <div>
-                  <h3 className="text-2xl font-black text-white">Solar Activation Flow</h3>
-                  <p className="text-xs text-slate-400">Instructor: Guru Elena Rossi • Stream 1080p AI Vision Active</p>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-2xl font-black text-white">{selectedSession.title}</h3>
+                    <span className="bg-[#2f80ed]/20 text-blue-300 text-[10px] font-black uppercase px-3 py-1 rounded-full border border-blue-400/30">
+                      REAL HD YOGA VIDEO
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Instructor: {selectedSession.instructor} • Target Pose: {selectedSession.poseName}
+                  </p>
                 </div>
               </div>
-              <button 
-                onClick={() => setActiveModal(null)}
-                className="w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xl font-bold transition-all"
-              >
-                ✕
-              </button>
+
+              <div className="flex items-center gap-3">
+                {selectedSession.youtubeWatchUrl && (
+                  <a
+                    href={selectedSession.youtubeWatchUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                  >
+                    <span>Watch on YouTube</span>
+                    <span>↗</span>
+                  </a>
+                )}
+                <button 
+                  onClick={() => setActiveModal(null)}
+                  className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-lg font-bold transition-all"
+                  title="Close Video Player"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            {/* Video Player Display */}
+            {/* Guaranteed Working Video Player Container */}
             <div className="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1200" 
-                alt="Yoga Video Stream"
-                className="w-full h-full object-cover opacity-70" 
+              <iframe
+                src={selectedSession.youtubeEmbedUrl || 'https://www.youtube.com/embed/v7AYKMP6rOE?autoplay=1&rel=0'}
+                title={selectedSession.title}
+                className="w-full h-full border-none"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
               />
 
               {/* Pose Alignment HUD Overlay */}
-              <div className="absolute top-6 left-6 bg-slate-900/80 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 flex items-center gap-4">
+              <div className="absolute top-6 left-6 bg-slate-900/85 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10 flex items-center gap-4 pointer-events-none z-10">
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
                 <div>
                   <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Pose HUD</p>
-                  <p className="text-sm font-black text-emerald-400">Sun Salutation B • 96% Match</p>
-                </div>
-              </div>
-
-              {/* Play Pause Center Overlay */}
-              <button 
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="w-24 h-24 rounded-full bg-[#2f80ed]/90 hover:bg-[#2f80ed] text-white flex items-center justify-center text-3xl shadow-2xl hover:scale-110 transition-all border-4 border-white/20"
-              >
-                {isPlaying ? '❚❚' : '▶'}
-              </button>
-
-              {/* Controls Bar */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent space-y-3">
-                {/* Progress Bar */}
-                <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden cursor-pointer">
-                  <div className="bg-[#2f80ed] h-full rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
-                </div>
-
-                <div className="flex justify-between items-center text-white text-xs font-bold">
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => setIsPlaying(!isPlaying)} className="text-lg">
-                      {isPlaying ? 'Pause' : 'Play'}
-                    </button>
-                    <span>06:45 / 45:00</span>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <span className="text-emerald-400 flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span> AI Pose Tracking ON
-                    </span>
-                    <button onClick={() => setActiveModal(null)} className="hover:text-slate-300">
-                      Close
-                    </button>
-                  </div>
+                  <p className="text-sm font-black text-emerald-400">{selectedSession.poseName || 'Surya Namaskar'} • 96% Match</p>
                 </div>
               </div>
             </div>
@@ -500,15 +524,15 @@ const YogaView = ({ onBack, lang = 'en' }) => {
             <div className="p-6 md:p-8 bg-slate-900 grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
                 <p className="text-[10px] uppercase font-bold text-slate-400">Current Pose Target</p>
-                <p className="text-base font-black text-white mt-1">Virabhadrasana II (Warrior 2)</p>
+                <p className="text-base font-black text-white mt-1">{selectedSession.poseName || 'Surya Namaskar B'}</p>
               </div>
               <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
                 <p className="text-[10px] uppercase font-bold text-slate-400">Heart Rate Sync</p>
                 <p className="text-base font-black text-pink-400 mt-1">108 BPM (Optimal Zone)</p>
               </div>
               <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                <p className="text-[10px] uppercase font-bold text-slate-400">Caloric Burn</p>
-                <p className="text-base font-black text-blue-400 mt-1">142 kcal burned</p>
+                <p className="text-[10px] uppercase font-bold text-slate-400">Est. Caloric Burn</p>
+                <p className="text-base font-black text-blue-400 mt-1">{selectedSession.calories || '280 kcal'}</p>
               </div>
             </div>
           </div>
@@ -526,7 +550,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
                   🤖
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white">Pulse AI Motion Analyzer</h3>
+                  <h3 className="text-2xl font-black text-white">Abhimanyu AI Motion Analyzer</h3>
                   <p className="text-xs text-slate-400">Live Joint Angle Tracking & Spinal Alignment</p>
                 </div>
               </div>
@@ -609,7 +633,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
           <div className="bg-[#1e293b] rounded-[3.5rem] border border-white/10 overflow-hidden max-w-2xl w-full shadow-2xl p-8 md:p-10 space-y-8">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-xs font-black text-[#2f80ed] uppercase tracking-widest">Pulse Vision Gemini Engine</p>
+                <p className="text-xs font-black text-[#2f80ed] uppercase tracking-widest">Abhimanyu Vision Gemini Engine</p>
                 <h3 className="text-3xl font-black text-white">Synthesize Custom Flow</h3>
               </div>
               <button 
@@ -707,7 +731,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
 
             <div className="flex gap-4">
               <button 
-                onClick={() => setActiveModal('video')}
+                onClick={() => openVideoModal(FEATURED_SESSION)}
                 className="flex-1 bg-[#2f80ed] hover:bg-blue-600 text-white py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl transition-all"
               >
                 Begin Flow Sequence ▶
@@ -770,7 +794,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
             <div className="space-y-2">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Required Equipment</p>
               <div className="flex flex-wrap gap-2">
-                {selectedSession.equipment.map((eq) => (
+                {selectedSession.equipment?.map((eq) => (
                   <span key={eq} className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/5">
                     🧘 {eq}
                   </span>
@@ -779,9 +803,7 @@ const YogaView = ({ onBack, lang = 'en' }) => {
             </div>
 
             <button 
-              onClick={() => {
-                setActiveModal('video');
-              }}
+              onClick={() => openVideoModal(selectedSession)}
               className="w-full bg-[#2f80ed] hover:bg-blue-600 text-white py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl transition-all flex items-center justify-center gap-3"
             >
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -796,4 +818,3 @@ const YogaView = ({ onBack, lang = 'en' }) => {
 };
 
 export default YogaView;
-

@@ -1,10 +1,10 @@
 const KEYS = {
-  CART_COUNT: 'pulseplus_cart_count',
-  CART_ITEMS: 'pulseplus_cart_items',
-  RECORDS: 'pulseplus_health_records',
-  STUDIO_PROJECTS: 'pulseplus_studio_projects',
-  USER_SESSION: 'pulseplus_user_session',
-  APPOINTMENTS: 'pulseplus_appointments'
+  CART_COUNT: 'abhimanyu_cart_count',
+  CART_ITEMS: 'abhimanyu_cart_items',
+  RECORDS: 'abhimanyu_health_records',
+  STUDIO_PROJECTS: 'abhimanyu_studio_projects',
+  USER_SESSION: 'abhimanyu_user_session',
+  APPOINTMENTS: 'abhimanyu_appointments'
 };
 
 export const storage = {

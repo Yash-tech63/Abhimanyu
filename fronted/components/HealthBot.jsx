@@ -5,8 +5,8 @@ import { Language } from '../../backened/types';
 const HealthBot = ({ lang = Language.EN, isPopup = false, onClose }) => {
   const isHindi = lang === Language.HI;
   const initialBotMsg = isHindi
-    ? '👋 **पल्स एआई सहायक** में आपका स्वागत है। \n\nमैं आपकी स्वास्थ्य आवश्यकताओं और नैदानिक प्रश्नों का विश्लेषण कर सकता हूं। \n\nआज मैं आपकी क्या सहायता कर सकता हूं?'
-    : '👋 Welcome to **Pulse AI Assistant**. \n\nI can analyze your medical data and clinical lifestyle needs. \n\nHow can I support your health goals today?';
+    ? '👋 **अभिमन्यु एआई सहायक** में आपका स्वागत है। \n\nमैं आपकी स्वास्थ्य आवश्यकताओं और नैदानिक प्रश्नों का विश्लेषण कर सकता हूं। \n\nआज मैं आपकी क्या सहायता कर सकता हूं?'
+    : '👋 Welcome to **Abhimanyu AI Assistant**. \n\nI can analyze your medical data and clinical lifestyle needs. \n\nHow can I support your health goals today?';
 
   const [messages, setMessages] = useState([
     { role: 'bot', text: initialBotMsg }

@@ -180,7 +180,7 @@ const NutritionGuideView = ({ onBack, onNavigate }) => {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-2xl font-black text-slate-800 dark:text-white">Pulse Superfood Directory</h3>
+                <h3 className="text-2xl font-black text-slate-800 dark:text-white">Abhimanyu Superfood Directory</h3>
                 <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">Nutrient-dense whole foods to optimize daily energy & gut health.</p>
               </div>
               <div className="flex flex-wrap gap-2">

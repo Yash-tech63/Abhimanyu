@@ -54,7 +54,7 @@ const Hero = ({ onNavigate, lang }) => {
           </div>
 
           <div className="space-y-8 animate-in slide-in-from-right duration-700">
-            {/* Live Inline Feature Video replacing static Experience Pulseplus banner */}
+            {/* Live Inline Feature Video replacing static Experience Abhimanyu banner */}
             <div className="relative group rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white/60 dark:border-slate-800/80 backdrop-blur-md hover:scale-[1.02] transition-all aspect-video bg-slate-900">
               <video
                 autoPlay
@@ -97,7 +97,7 @@ const Hero = ({ onNavigate, lang }) => {
             <iframe
               className="w-full h-full"
               src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-              title="Pulseplus Platform Demo"
+              title="Abhimanyu Platform Demo"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

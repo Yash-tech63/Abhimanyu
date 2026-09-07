@@ -97,7 +97,7 @@ const CleanCutEditor = () => {
                   {isProcessing && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-20 space-y-4">
                       <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                      <p className="text-[12px] font-black text-white bg-blue-600 px-6 py-3 rounded-full backdrop-blur-md shadow-2xl">Pulse AI is Cleaning Your Photo...</p>
+                      <p className="text-[12px] font-black text-white bg-blue-600 px-6 py-3 rounded-full backdrop-blur-md shadow-2xl">Abhimanyu AI is Cleaning Your Photo...</p>
                     </div>
                   )}
                   {editedImage && !showOriginal && (

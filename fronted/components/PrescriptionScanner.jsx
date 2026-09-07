@@ -36,7 +36,7 @@ const PrescriptionScanner = ({ onBack }) => {
           </button>
           <div>
             <h1 className="text-3xl font-black text-[#1e2a3a]">Prescription Scanner</h1>
-            <p className="text-slate-500 font-medium">Powered by Pulseplus Vision AI</p>
+            <p className="text-slate-500 font-medium">Powered by Abhimanyu Vision AI</p>
           </div>
         </div>
         <button onClick={() => fileInputRef.current?.click()} className="bg-[#1e2a3a] text-white px-8 py-4 rounded-2xl font-black">

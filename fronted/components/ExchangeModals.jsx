@@ -63,7 +63,7 @@ export const DonateModal = ({ isOpen, onClose, onDonateSuccess }) => {
             </div>
 
             <div className="p-4 bg-purple-50 dark:bg-purple-950/30 rounded-2xl border border-purple-200 dark:border-purple-900/30 text-purple-700 dark:text-purple-300 font-bold text-xs">
-              🎉 500 Pulse Health Credits Awarded to Your Account!
+              🎉 500 Abhimanyu Health Credits Awarded to Your Account!
             </div>
 
             <button onClick={handleClose} className="w-full bg-[#2f80ed] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest">
@@ -231,7 +231,7 @@ export const TradeInModal = ({ isOpen, onClose, onTradeInSuccess }) => {
             <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-2">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Approved Exchange Credit Value</span>
               <span className="text-3xl font-black text-[#2f80ed]">₹{estimatedValue.toLocaleString()}</span>
-              <span className="text-xs text-emerald-500 font-bold block">({healthCredits.toLocaleString()} Pulse Health Credits)</span>
+              <span className="text-xs text-emerald-500 font-bold block">({healthCredits.toLocaleString()} Abhimanyu Health Credits)</span>
             </div>
 
             <button onClick={handleClose} className="w-full bg-[#2f80ed] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest">

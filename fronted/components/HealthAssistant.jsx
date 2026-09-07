@@ -16,6 +16,7 @@ const HealthAssistant = ({ lang = Language.EN, onClose }) => {
   const [pendingImage, setPendingImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [speakingIdx, setSpeakingIdx] = useState(null);
 
   const scrollRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -28,37 +29,94 @@ const HealthAssistant = ({ lang = Language.EN, onClose }) => {
   }, [lang]);
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = isHindi ? 'hi-IN' : 'en-US';
-      recognition.onstart = () => setIsListening(true);
-      recognition.onend = () => setIsListening(false);
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        if (transcript) setInput(prev => (prev ? prev + ' ' : '') + transcript);
-      };
-      recognitionRef.current = recognition;
-    }
-  }, [isHindi]);
-
-  const toggleListening = () => {
-    if (!recognitionRef.current) return;
-    if (isListening) recognitionRef.current.stop();
-    else recognitionRef.current.start();
-  };
-
-  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
+  const toggleListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert(isHindi 
+        ? "आपका ब्राउज़र वॉइस सर्च का समर्थन नहीं करता है। कृपया गूगल क्रोम का उपयोग करें।" 
+        : "Voice search is not supported in this browser. Please use Google Chrome or Microsoft Edge.");
+      return;
+    }
+
+    if (isListening) {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (e) {}
+      }
+      setIsListening(false);
+    } else {
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = isHindi ? 'hi-IN' : 'en-US';
+
+        recognition.onstart = () => {
+          setIsListening(true);
+        };
+
+        recognition.onresult = (event) => {
+          let currentTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            currentTranscript += event.results[i][0].transcript;
+          }
+          if (currentTranscript) {
+            setInput(currentTranscript);
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.warn("Speech Recognition Error:", event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+      } catch (err) {
+        console.error("Failed to start voice search:", err);
+        setIsListening(false);
+      }
+    }
+  };
+
+  const speakMessage = (text, idx) => {
+    if (!('speechSynthesis' in window)) return;
+
+    if (speakingIdx === idx) {
+      window.speechSynthesis.cancel();
+      setSpeakingIdx(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[*#_`]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = isHindi ? 'hi-IN' : 'en-US';
+    utterance.rate = 1.0;
+    
+    utterance.onend = () => setSpeakingIdx(null);
+    utterance.onerror = () => setSpeakingIdx(null);
+
+    setSpeakingIdx(idx);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const handleSend = async (customText) => {
     const query = (customText || input).trim();
     if ((!query && !pendingImage) || loading) return;
+
+    if (isListening && recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch (e) {}
+      setIsListening(false);
+    }
 
     const currentImg = pendingImage;
     setMessages(prev => [
@@ -111,7 +169,7 @@ const HealthAssistant = ({ lang = Language.EN, onClose }) => {
             </div>
             <p className="text-[10px] font-bold text-slate-300 mt-0.5 flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${isListening ? 'bg-red-400 animate-ping' : 'bg-green-400'}`}></span>
-              {isListening ? (isHindi ? 'सुन रहा है...' : 'Listening...') : (isHindi ? '24/7 क्लिनिकल सपोर्ट' : '24/7 Clinical Support')}
+              {isListening ? (isHindi ? '🎙️ सुन रहा है (बोलें)...' : '🎙️ Listening (Speak now)...') : (isHindi ? '24/7 क्लिनिकल सपोर्ट' : '24/7 Clinical Support')}
             </p>
           </div>
         </div>
@@ -139,12 +197,28 @@ const HealthAssistant = ({ lang = Language.EN, onClose }) => {
                 />
               )}
               <div
-                className={`p-4 rounded-[1.5rem] text-xs leading-relaxed inline-block shadow-sm ${m.role === 'user'
+                className={`p-4 rounded-[1.5rem] text-xs leading-relaxed inline-block shadow-sm relative group ${
+                  m.role === 'user'
                     ? 'bg-[#2f80ed] text-white font-medium rounded-tr-none'
                     : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-100 dark:border-slate-700/70 rounded-tl-none'
-                  }`}
+                }`}
               >
                 <div className="whitespace-pre-wrap">{m.text}</div>
+
+                {/* Text-to-Speech Button on Assistant Messages */}
+                {m.role === 'assistant' && (
+                  <button
+                    onClick={() => speakMessage(m.text, idx)}
+                    className={`mt-2 text-[10px] font-bold px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
+                      speakingIdx === idx
+                        ? 'bg-amber-500 text-white border-amber-600 animate-pulse'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-blue-50 hover:text-blue-600'
+                    }`}
+                    title="Read Aloud"
+                  >
+                    <span>{speakingIdx === idx ? '🔊 Stop' : '🔊 Read Aloud'}</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -206,15 +280,19 @@ const HealthAssistant = ({ lang = Language.EN, onClose }) => {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSend()}
-            placeholder={isHindi ? "स्वास्थ्य प्रश्न या लक्षण लिखें..." : "Ask Health Assistant anything..."}
+            placeholder={isListening ? (isHindi ? "बोलिए, आवाज़ रिकॉर्ड हो रही है..." : "Listening... speak your query...") : (isHindi ? "स्वास्थ्य प्रश्न लिखें या वॉइस बटन दबाएं..." : "Type query or tap mic for voice...")}
             className="flex-1 bg-transparent border-none outline-none text-xs font-medium px-1 text-slate-800 dark:text-white placeholder:text-slate-400"
           />
 
           <button
             type="button"
             onClick={toggleListening}
-            className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-slate-400 hover:text-[#2f80ed]'}`}
-            title={isListening ? "Stop voice input" : "Voice search"}
+            className={`p-2.5 rounded-full transition-all shadow-sm flex items-center justify-center ${
+              isListening
+                ? 'bg-red-500 text-white animate-pulse shadow-red-500/50 ring-2 ring-red-300'
+                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 hover:bg-[#2f80ed] hover:text-white'
+            }`}
+            title={isListening ? (isHindi ? "वॉइस सर्च रोकें" : "Stop Voice Search") : (isHindi ? "वॉइस सर्च शुरू करें" : "Start Voice Search")}
           >
             🎙️
           </button>
