@@ -7,6 +7,16 @@ const KEYS = {
   APPOINTMENTS: 'abhimanyu_appointments'
 };
 
+const AUTH_KEYS = [
+  'token',
+  'authToken',
+  'accessToken',
+  'jwtToken',
+  'user',
+  'currentUser',
+  KEYS.USER_SESSION
+];
+
 export const storage = {
   getCartCount: () => Number(localStorage.getItem(KEYS.CART_COUNT)) || 0,
   setCartCount: (count) => localStorage.setItem(KEYS.CART_COUNT, count.toString()),
@@ -24,7 +34,7 @@ export const storage = {
     const totalCount = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
     localStorage.setItem(KEYS.CART_COUNT, totalCount.toString());
   },
-  
+
   getStudioProjects: () => {
     const data = localStorage.getItem(KEYS.STUDIO_PROJECTS);
     return data ? JSON.parse(data) : [];
@@ -33,7 +43,7 @@ export const storage = {
     const projects = storage.getStudioProjects();
     localStorage.setItem(KEYS.STUDIO_PROJECTS, JSON.stringify([project, ...projects]));
   },
-  
+
   getAppointments: () => {
     const data = localStorage.getItem(KEYS.APPOINTMENTS);
     return data ? JSON.parse(data) : [];
@@ -42,12 +52,12 @@ export const storage = {
     const appointments = storage.getAppointments();
     localStorage.setItem(KEYS.APPOINTMENTS, JSON.stringify([appointment, ...appointments]));
   },
-  
+
   logout: () => {
-    localStorage.removeItem(KEYS.USER_SESSION);
+    AUTH_KEYS.forEach((key) => localStorage.removeItem(key));
   },
   login: (id) => {
     localStorage.setItem(KEYS.USER_SESSION, JSON.stringify({ id, timestamp: Date.now() }));
   },
-  isLoggedIn: () => !!localStorage.getItem(KEYS.USER_SESSION)
+  isLoggedIn: () => AUTH_KEYS.some((key) => Boolean(localStorage.getItem(key)))
 };

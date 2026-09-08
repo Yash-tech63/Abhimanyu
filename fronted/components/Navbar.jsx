@@ -2,679 +2,655 @@ import React, { useState, useEffect } from 'react';
 import { AppView, Language } from '../../backened/types';
 import { translations } from '../../backened/i18n';
 import Logo from './Logo';
+import { storage } from '../services/storageService';
 
 const Navbar = ({
-currentView,
-setView,
-lang,
-setLang,
-isDarkMode,
-toggleDarkMode,
-onLogin,
-cart = [],
-onOpenCart,
+  currentView,
+  setView,
+  lang,
+  setLang,
+  isDarkMode,
+  toggleDarkMode,
+  onLogin,
+  cart = [],
+  onOpenCart,
 }) => {
 
-const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-/*
-
-* LOGIN STATUS
-  */
+  /*
+  
+  * LOGIN STATUS
+    */
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
 
 
-try {
+    try {
+      return storage.isLoggedIn();
 
-  const token =
-    localStorage.getItem('token') ||
-    localStorage.getItem('authToken') ||
-    localStorage.getItem('accessToken') ||
-    localStorage.getItem('jwtToken');
+    } catch (error) {
 
-  const user =
-    localStorage.getItem('user') ||
-    localStorage.getItem('currentUser');
+      console.error('Login check error:', error);
 
-  return Boolean(token || user);
+      return false;
 
-} catch (error) {
-
-  console.error('Login check error:', error);
-
-  return false;
-
-}
+    }
 
 
-});
+  });
 
-/*
-
-* CHECK LOGIN STATUS
-  */
+  /*
+  
+  * CHECK LOGIN STATUS
+    */
   useEffect(() => {
 
 
-const checkLoginStatus = () => {
+    const checkLoginStatus = () => {
 
-  try {
+      try {
 
-    const token =
-      localStorage.getItem('token') ||
-      localStorage.getItem('authToken') ||
-      localStorage.getItem('accessToken') ||
-      localStorage.getItem('jwtToken');
+        setIsLoggedIn(storage.isLoggedIn());
 
-    const user =
-      localStorage.getItem('user') ||
-      localStorage.getItem('currentUser');
+      } catch (error) {
 
-    setIsLoggedIn(Boolean(token || user));
+        console.error(
+          'Login status check error:',
+          error
+        );
 
-  } catch (error) {
+        setIsLoggedIn(false);
 
-    console.error(
-      'Login status check error:',
-      error
+      }
+
+    };
+
+
+    /*
+     * Check when Navbar loads
+     */
+    checkLoginStatus();
+
+
+    /*
+     * Same tab login event
+     */
+    window.addEventListener(
+      'authChanged',
+      checkLoginStatus
     );
 
-    setIsLoggedIn(false);
 
-  }
-
-};
-
-
-/*
- * Check when Navbar loads
- */
-checkLoginStatus();
+    /*
+     * Other tab storage event
+     */
+    window.addEventListener(
+      'storage',
+      checkLoginStatus
+    );
 
 
-/*
- * Same tab login event
- */
-window.addEventListener(
-  'authChanged',
-  checkLoginStatus
-);
+    return () => {
+
+      window.removeEventListener(
+        'authChanged',
+        checkLoginStatus
+      );
+
+      window.removeEventListener(
+        'storage',
+        checkLoginStatus
+      );
+
+    };
 
 
-/*
- * Other tab storage event
- */
-window.addEventListener(
-  'storage',
-  checkLoginStatus
-);
+  }, []);
 
-
-return () => {
-
-  window.removeEventListener(
-    'authChanged',
-    checkLoginStatus
-  );
-
-  window.removeEventListener(
-    'storage',
-    checkLoginStatus
-  );
-
-};
-
-
-}, []);
-
-/*
-
-* TRANSLATIONS
-  */
+  /*
+  
+  * TRANSLATIONS
+    */
   const t =
-  translations[lang]?.nav ||
-  translations[Language.EN]?.nav ||
-  {};
+    translations[lang]?.nav ||
+    translations[Language.EN]?.nav ||
+    {};
 
-/*
-
-* CART COUNT
-  */
+  /*
+  
+  * CART COUNT
+    */
   const cartItemCount = Array.isArray(cart)
-  ? cart.reduce(
-  (sum, item) =>
-  sum + (item?.quantity || 1),
-  0
-  )
-  : 0;
+    ? cart.reduce(
+      (sum, item) =>
+        sum + (item?.quantity || 1),
+      0
+    )
+    : 0;
 
-/*
-
-* CART TOTAL
-  */
+  /*
+  
+  * CART TOTAL
+    */
   const cartTotal = Array.isArray(cart)
-  ? cart.reduce(
-  (sum, item) =>
-  sum +
-  (Number(item?.price) || 0) *
-  (Number(item?.quantity) || 1),
-  0
-  )
-  : 0;
+    ? cart.reduce(
+      (sum, item) =>
+        sum +
+        (Number(item?.price) || 0) *
+        (Number(item?.quantity) || 1),
+      0
+    )
+    : 0;
 
-/*
-
-* MENU ITEMS
-  */
+  /*
+  
+  * MENU ITEMS
+    */
   const menuItems = [
 
 
-{
+    {
 
-  label: t.home || 'Home',
-  view: AppView.HOME,
-},
+      label: t.home || 'Home',
+      view: AppView.HOME,
+    },
 
-{
-  label: t.hospitals || 'Hospitals',
-  view: AppView.HOSPITALS,
-},
+    {
+      label: t.hospitals || 'Hospitals',
+      view: AppView.HOSPITALS,
+    },
 
-{
-  label: t.pharmacy || 'Pharmacy',
-  view: AppView.STORE,
-},
+    {
+      label: t.pharmacy || 'Pharmacy',
+      view: AppView.STORE,
+    },
 
-{
-  label: t.emergency || 'Emergency',
-  view: AppView.AMBULANCE,
-  isEmergency: true,
-},
+    {
+      label: t.emergency || 'Emergency',
+      view: AppView.AMBULANCE,
+      isEmergency: true,
+    },
 
-{
-  label: t.equipment || 'Equipment',
-  view: AppView.EQUIPMENT_PORTAL,
-},
+    {
+      label: t.equipment || 'Equipment',
+      view: AppView.EQUIPMENT_PORTAL,
+    },
 
-{
-  label: t.consult || 'Consult',
-  view: AppView.CONSULT,
-},
+    {
+      label: t.consult || 'Consult',
+      view: AppView.CONSULT,
+    },
 
-{
-  label: t.wellness || 'Wellness',
-  view: AppView.NUTRITION_GUIDE,
-},
+    {
+      label: t.wellness || 'Wellness',
+      view: AppView.NUTRITION_GUIDE,
+    },
 
 
-];
+  ];
 
-/*
-
-* NAVIGATION
-  */
+  /*
+  
+  * NAVIGATION
+    */
   const handleNavClick = (view) => {
 
 
-if (view && setView) {
+    if (view && setView) {
 
 
 
-  setView(view);
+      setView(view);
 
-}
+    }
 
-setIsMenuOpen(false);
+    setIsMenuOpen(false);
 
 
-};
+  };
 
-/*
-
-* ABHA LOGIN
-  */
+  /*
+  
+  * ABHA LOGIN
+    */
   const handleLogin = () => {
 
 
-setIsMenuOpen(false);
+    setIsMenuOpen(false);
 
 
 
-if (onLogin) {
+    if (onLogin) {
 
-  onLogin();
+      onLogin();
 
-}
+    }
 
 
-};
+  };
 
-/*
-
-* MY ACCOUNT -> PROFILE PAGE
-  */
+  /*
+  
+  * MY ACCOUNT -> PROFILE PAGE
+    */
   const handleMyAccount = () => {
 
 
-setIsMenuOpen(false);
+    setIsMenuOpen(false);
 
-/*
- * Open Profile Page
- */
-if (AppView.PROFILE) {
+    /*
+     * Open Profile Page
+     */
+    if (AppView.PROFILE) {
 
-  setView(AppView.PROFILE);
+      setView(AppView.PROFILE);
 
-} else {
+    } else {
 
-  console.error(
-    'AppView.PROFILE is not defined in types file'
-  );
+      console.error(
+        'AppView.PROFILE is not defined in types file'
+      );
 
-}
-
-
-};
-
-return (
+    }
 
 
-<header className="bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-xl sticky top-0 z-[100] border-b border-slate-100 dark:border-white/5 shadow-sm transition-all">
+  };
+
+  return (
 
 
-  <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-xl sticky top-0 z-[100] border-b border-slate-100 dark:border-white/5 shadow-sm transition-all">
 
 
-    <div className="flex justify-between items-center h-20">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
 
 
-      {/* ================= LOGO ================= */}
-
-      <div
-        className="flex items-center gap-3 cursor-pointer group shrink-0"
-
-        onClick={() =>
-          handleNavClick(AppView.HOME)
-        }
-      >
-
-        <Logo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300" />
-
-        <span className="text-2xl font-mono font-black text-[#2f80ed] tracking-tighter">
-
-          Abhimanyu
-
-        </span>
-
-      </div>
+        <div className="flex justify-between items-center h-20">
 
 
-      {/* ================= DESKTOP NAV ================= */}
+          {/* ================= LOGO ================= */}
 
-      <nav className="hidden lg:flex items-center gap-1">
-
-
-        {menuItems.map((item) => (
-
-          <button
-            key={String(item.view)}
-
-            type="button"
+          <div
+            className="flex items-center gap-3 cursor-pointer group shrink-0"
 
             onClick={() =>
-              handleNavClick(item.view)
+              handleNavClick(AppView.HOME)
             }
-
-            className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-              item.isEmergency
-
-                ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10'
-
-                : currentView === item.view
-
-                ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10 shadow-sm'
-
-                : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
-
-            }`}
           >
 
-            {item.label}
+            <Logo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300" />
 
-          </button>
+            <span className="text-2xl font-mono font-black text-[#2f80ed] tracking-tighter">
 
-        ))}
+              Abhimanyu
 
+            </span>
 
-      </nav>
-
-
-      {/* ================= RIGHT SIDE ================= */}
-
-      <div className="flex items-center gap-2 sm:gap-3">
+          </div>
 
 
-        {/* ================= LANGUAGE ================= */}
+          {/* ================= DESKTOP NAV ================= */}
 
-        <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
+          <nav className="hidden lg:flex items-center gap-1">
 
 
-          <button
-            type="button"
+            {menuItems.map((item) => (
 
-            onClick={() => {
+              <button
+                key={String(item.view)}
 
-              if (setLang) {
+                type="button"
 
-                setLang(Language.EN);
+                onClick={() =>
+                  handleNavClick(item.view)
+                }
+
+                className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${item.isEmergency
+
+                  ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10'
+
+                  : currentView === item.view
+
+                    ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10 shadow-sm'
+
+                    : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
+
+                  }`}
+              >
+
+                {item.label}
+
+              </button>
+
+            ))}
+
+
+          </nav>
+
+
+          {/* ================= RIGHT SIDE ================= */}
+
+          <div className="flex items-center gap-2 sm:gap-3">
+
+
+            {/* ================= LANGUAGE ================= */}
+
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 p-1 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
+
+
+              <button
+                type="button"
+
+                onClick={() => {
+
+                  if (setLang) {
+
+                    setLang(Language.EN);
+
+                  }
+
+                }}
+
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wider transition-all flex items-center gap-1.5 ${lang === Language.EN
+
+                  ? 'bg-[#2f80ed] text-white shadow-md scale-105'
+
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+
+                  }`}
+
+                title="Switch to English"
+              >
+
+                <span className="text-xs">
+
+                  🇬🇧
+
+                </span>
+
+                <span>
+
+                  EN
+
+                </span>
+
+              </button>
+
+
+              <button
+                type="button"
+
+                onClick={() => {
+
+                  if (setLang) {
+
+                    setLang(Language.HI);
+
+                  }
+
+                }}
+
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wider transition-all flex items-center gap-1.5 ${lang === Language.HI
+
+                  ? 'bg-[#2f80ed] text-white shadow-md scale-105'
+
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
+
+                  }`}
+
+                title="हिंदी में बदलें"
+              >
+
+                <span className="text-xs">
+
+                  🇮🇳
+
+                </span>
+
+                <span>
+
+                  हिंदी
+
+                </span>
+
+              </button>
+
+
+            </div>
+
+
+            {/* ================= DARK MODE ================= */}
+
+            <button
+              type="button"
+
+              onClick={toggleDarkMode}
+
+              className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all"
+
+              title={
+                isDarkMode
+                  ? 'Light Mode'
+                  : 'Dark Mode'
+              }
+            >
+
+              {isDarkMode
+
+                ? '☀️'
+
+                : '🌙'
 
               }
 
-            }}
-
-            className={`px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wider transition-all flex items-center gap-1.5 ${
-              lang === Language.EN
-
-                ? 'bg-[#2f80ed] text-white shadow-md scale-105'
-
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
-
-            }`}
-
-            title="Switch to English"
-          >
-
-            <span className="text-xs">
-
-              🇬🇧
-
-            </span>
-
-            <span>
-
-              EN
-
-            </span>
-
-          </button>
+            </button>
 
 
-          <button
-            type="button"
+            {/* ================= ABHA LOGIN / MY ACCOUNT ================= */}
 
-            onClick={() => {
+            {!isLoggedIn ? (
 
-              if (setLang) {
+              <button
+                type="button"
 
-                setLang(Language.HI);
+                onClick={handleLogin}
 
+                className="hidden sm:flex items-center gap-2 bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
+              >
+
+                🔐
+
+                {t.login || 'ABHA Login'}
+
+              </button>
+
+            ) : (
+
+              <button
+                type="button"
+
+                onClick={handleMyAccount}
+
+                className="hidden sm:flex items-center gap-2 bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
+              >
+
+                👤
+
+                My Account
+
+              </button>
+
+            )}
+
+
+            {/* ================= CART ================= */}
+
+            <button
+              type="button"
+
+              onClick={onOpenCart}
+
+              className="relative bg-slate-100 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-800 dark:text-white px-3.5 sm:px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:scale-105 flex items-center gap-2 cursor-pointer"
+
+              title="View Shopping Cart"
+            >
+
+              <span className="text-xl">
+
+                🛒
+
+              </span>
+
+
+              {cartItemCount > 0 && (
+
+                <div className="flex items-center gap-1.5">
+
+
+                  <span className="bg-[#2f80ed] text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-bounce">
+
+                    {cartItemCount}
+
+                  </span>
+
+
+                  <span className="hidden md:inline text-xs font-black text-[#2f80ed]">
+
+                    ₹{cartTotal.toLocaleString()}
+
+                  </span>
+
+
+                </div>
+
+              )}
+
+
+            </button>
+
+
+            {/* ================= MOBILE MENU ================= */}
+
+            <button
+              type="button"
+
+              onClick={() =>
+                setIsMenuOpen(!isMenuOpen)
               }
 
-            }}
+              className="lg:hidden p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-white border border-slate-200"
+            >
 
-            className={`px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wider transition-all flex items-center gap-1.5 ${
-              lang === Language.HI
+              ☰
 
-                ? 'bg-[#2f80ed] text-white shadow-md scale-105'
+            </button>
 
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
 
-            }`}
-
-            title="हिंदी में बदलें"
-          >
-
-            <span className="text-xs">
-
-              🇮🇳
-
-            </span>
-
-            <span>
-
-              हिंदी
-
-            </span>
-
-          </button>
+          </div>
 
 
         </div>
 
 
-        {/* ================= DARK MODE ================= */}
-
-        <button
-          type="button"
-
-          onClick={toggleDarkMode}
-
-          className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all"
-
-          title={
-            isDarkMode
-              ? 'Light Mode'
-              : 'Dark Mode'
-          }
-        >
-
-          {isDarkMode
-
-            ? '☀️'
-
-            : '🌙'
-
-          }
-
-        </button>
-
-
-        {/* ================= ABHA LOGIN / MY ACCOUNT ================= */}
-
-        {!isLoggedIn ? (
-
-          <button
-            type="button"
-
-            onClick={handleLogin}
-
-            className="hidden sm:flex items-center gap-2 bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
-          >
-
-            🔐
-
-            {t.login || 'ABHA Login'}
-
-          </button>
-
-        ) : (
-
-          <button
-            type="button"
-
-            onClick={handleMyAccount}
-
-            className="hidden sm:flex items-center gap-2 bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
-          >
-
-            👤
-
-            My Account
-
-          </button>
-
-        )}
-
-
-        {/* ================= CART ================= */}
-
-        <button
-          type="button"
-
-          onClick={onOpenCart}
-
-          className="relative bg-slate-100 hover:bg-blue-50 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-800 dark:text-white px-3.5 sm:px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all hover:scale-105 flex items-center gap-2 cursor-pointer"
-
-          title="View Shopping Cart"
-        >
-
-          <span className="text-xl">
-
-            🛒
-
-          </span>
-
-
-          {cartItemCount > 0 && (
-
-            <div className="flex items-center gap-1.5">
-
-
-              <span className="bg-[#2f80ed] text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-bounce">
-
-                {cartItemCount}
-
-              </span>
-
-
-              <span className="hidden md:inline text-xs font-black text-[#2f80ed]">
-
-                ₹{cartTotal.toLocaleString()}
-
-              </span>
-
-
-            </div>
-
-          )}
-
-
-        </button>
-
-
-        {/* ================= MOBILE MENU ================= */}
-
-        <button
-          type="button"
-
-          onClick={() =>
-            setIsMenuOpen(!isMenuOpen)
-          }
-
-          className="lg:hidden p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-white border border-slate-200"
-        >
-
-          ☰
-
-        </button>
-
-
       </div>
 
 
-    </div>
+      {/* ================= MOBILE MENU ================= */}
+
+      {isMenuOpen && (
+
+        <div className="lg:hidden absolute top-20 w-full bg-white dark:bg-[#070b14] border-b border-slate-100 dark:border-slate-800 p-6 space-y-4 shadow-2xl">
 
 
-  </div>
+          {/* MOBILE MENU ITEMS */}
+
+          {menuItems.map((item) => (
+
+            <button
+              key={String(item.view)}
+
+              type="button"
+
+              onClick={() =>
+                handleNavClick(item.view)
+              }
+
+              className={`w-full text-left p-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all ${item.isEmergency
+
+                ? 'text-red-500 bg-red-50 dark:bg-red-500/10'
+
+                : currentView === item.view
+
+                  ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10'
+
+                  : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+
+                }`}
+            >
+
+              {item.label}
+
+            </button>
+
+          ))}
 
 
-  {/* ================= MOBILE MENU ================= */}
+          {/* ================= MOBILE LOGIN / MY ACCOUNT ================= */}
 
-  {isMenuOpen && (
-
-    <div className="lg:hidden absolute top-20 w-full bg-white dark:bg-[#070b14] border-b border-slate-100 dark:border-slate-800 p-6 space-y-4 shadow-2xl">
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
 
 
-      {/* MOBILE MENU ITEMS */}
+            {!isLoggedIn ? (
 
-      {menuItems.map((item) => (
+              <button
+                type="button"
 
-        <button
-          key={String(item.view)}
+                onClick={handleLogin}
 
-          type="button"
+                className="w-full bg-[#2f80ed] text-white p-4 rounded-2xl font-black uppercase text-xs tracking-widest"
+              >
 
-          onClick={() =>
-            handleNavClick(item.view)
-          }
+                🔐
 
-          className={`w-full text-left p-4 rounded-2xl font-black uppercase text-xs tracking-widest transition-all ${
-            item.isEmergency
+                {' '}
 
-              ? 'text-red-500 bg-red-50 dark:bg-red-500/10'
+                {t.login || 'ABHA Login'}
 
-              : currentView === item.view
+              </button>
 
-              ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10'
+            ) : (
 
-              : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+              <button
+                type="button"
 
-          }`}
-        >
+                onClick={handleMyAccount}
 
-          {item.label}
+                className="w-full bg-[#2f80ed] text-white p-4 rounded-2xl font-black uppercase text-xs tracking-widest"
+              >
 
-        </button>
+                👤
 
-      ))}
+                {' '}
 
+                My Account
 
-      {/* ================= MOBILE LOGIN / MY ACCOUNT ================= */}
+              </button>
 
-      <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
-
-
-        {!isLoggedIn ? (
-
-          <button
-            type="button"
-
-            onClick={handleLogin}
-
-            className="w-full bg-[#2f80ed] text-white p-4 rounded-2xl font-black uppercase text-xs tracking-widest"
-          >
-
-            🔐
-
-            {' '}
-
-            {t.login || 'ABHA Login'}
-
-          </button>
-
-        ) : (
-
-          <button
-            type="button"
-
-            onClick={handleMyAccount}
-
-            className="w-full bg-[#2f80ed] text-white p-4 rounded-2xl font-black uppercase text-xs tracking-widest"
-          >
-
-            👤
-
-            {' '}
-
-            My Account
-
-          </button>
-
-        )}
+            )}
 
 
-      </div>
+          </div>
 
 
-    </div>
+        </div>
 
-  )}
-
-
-</header>
+      )}
 
 
-);
+    </header>
+
+
+  );
 
 };
 

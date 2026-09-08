@@ -42,6 +42,23 @@ app.use(
         optionsSuccessStatus: 204
     })
 );
+const reportRoutes =
+    require("./src/routes/reportRoutes");
+app.use(
+    "/api/reports",
+    reportRoutes
+);
+const path = require("path");
+
+app.use(
+    "/uploads",
+    express.static(
+        path.join(
+            __dirname,
+            "uploads"
+        )
+    )
+);
 
 app.use(
     express.json()
