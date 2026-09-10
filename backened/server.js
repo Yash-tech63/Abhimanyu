@@ -42,6 +42,13 @@ app.use(
         optionsSuccessStatus: 204
     })
 );
+app.use(
+    express.json()
+);
+app.use((req, res, next) => {
+    console.log("REQUEST:", req.method, req.originalUrl);
+    next();
+});
 const reportRoutes =
     require("./src/routes/reportRoutes");
 app.use(
@@ -60,9 +67,6 @@ app.use(
     )
 );
 
-app.use(
-    express.json()
-);
 
 // Test API
 app.get(
@@ -98,6 +102,7 @@ app.use(
         });
     }
 );
+
 
 const PORT =
     process.env.PORT ||
