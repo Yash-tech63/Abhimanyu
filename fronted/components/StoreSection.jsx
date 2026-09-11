@@ -42,14 +42,14 @@ const StoreSection = ({ onNavigate, lang = Language.EN, cart = [], onAddToCart, 
 
     return (
         <section className="px-4 md:px-8 py-20 space-y-12 max-w-[1440px] mx-auto relative z-10">
-            <div className="bg-[#1e2a3a] dark:bg-slate-900 rounded-[4rem] p-10 md:p-14 text-white shadow-2xl space-y-10 relative overflow-hidden">
+            <div className="bg-[#1471C7] dark:bg-slate-700 rounded-[4rem] p-10 md:p-14 text-white shadow-2xl space-y-10 relative overflow-hidden">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
                     <div className="space-y-2 text-center md:text-left">
                         <h2 className="text-4xl font-black tracking-tighter uppercase">{storeT.title || t.marketplace}</h2>
-                        <p className="text-slate-400 font-medium max-w-md">{storeT.subtitle || t.marketplaceSub}</p>
+                        <p className="text-red-100 font-medium max-w-md">{storeT.subtitle || t.marketplaceSub}</p>
                     </div>
                     <div className="flex gap-4">
-                        <button onClick={onOpenCart} className="bg-white/10 hover:bg-white/20 px-8 py-4 rounded-3xl font-black text-[10px] uppercase tracking-widest border border-white/10 transition-all flex items-center gap-2 cursor-pointer">
+                        <button onClick={onOpenCart} className="bg-black/50 hover:bg-black/100 px-8 py-4 rounded-3xl font-black text-[10px] uppercase tracking-widest border border-white/10 transition-all flex items-center gap-2 cursor-pointer">
                             <span>🛒 {storeT.cart || 'Cart'}</span>
                             <span className="bg-[#2f80ed] text-white px-2 py-0.5 rounded-full text-[10px]">{cart.reduce((s, i) => s + (i.quantity || 1), 0)}</span>
                             <span>(₹{cartTotal.toLocaleString()})</span>
@@ -57,11 +57,11 @@ const StoreSection = ({ onNavigate, lang = Language.EN, cart = [], onAddToCart, 
                         <button onClick={() => onNavigate?.(AppView.AMBULANCE)} className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-3xl font-black text-[10px] uppercase tracking-widest shadow-xl transition-all cursor-pointer">{storeT.emergencySos || 'Emergency SOS'}</button>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4   relative z-10">
                     {[
-                        { label: storeT.buyMeds || 'Buy Meds', icon: '💊', color: 'bg-blue-500/20', view: AppView.STORE },
+                        { label: storeT.buyMeds || 'Buy Meds', icon: '💊', color: 'bg-orange-500/20', view: AppView.STORE },
                         { label: storeT.rentEquipment || 'Rent Equipment', icon: '🦽', color: 'bg-orange-500/20', view: AppView.EQUIPMENT_PORTAL },
-                        { label: storeT.donations || 'Donations', icon: '🤝', color: 'bg-purple-500/20', view: AppView.EQUIPMENT_PORTAL }
+                        { label: storeT.donations || 'Donations', icon: '🤝', color: 'bg-orange-500/20', view: AppView.EQUIPMENT_PORTAL }
                     ].map(hub => <div key={hub.label} onClick={() => onNavigate?.(hub.view)} className={`${hub.color} p-6 rounded-[2.5rem] border border-white/5 hover:bg-white/10 cursor-pointer transition-all flex items-center gap-4 group active:scale-95`}><span className="text-3xl group-hover:rotate-12 transition-transform">{hub.icon}</span><span className="text-[10px] font-black uppercase tracking-widest">{hub.label}</span></div>)}
                 </div>
             </div>
@@ -95,8 +95,8 @@ const StoreSection = ({ onNavigate, lang = Language.EN, cart = [], onAddToCart, 
                                 <button
                                     onClick={() => handleAddProduct(product)}
                                     className={`h-12 px-5 rounded-2xl font-black text-xs transition-all shadow-sm cursor-pointer flex items-center gap-1.5 ${addedIds[product.id]
-                                            ? 'bg-green-500 text-white scale-105'
-                                            : 'bg-slate-100 dark:bg-slate-900 hover:bg-[#2f80ed] hover:text-white text-slate-700 dark:text-slate-300'
+                                        ? 'bg-green-500 text-white scale-105'
+                                        : 'bg-slate-100 dark:bg-slate-900 hover:bg-[#2f80ed] hover:text-white text-slate-700 dark:text-slate-300'
                                         }`}
                                 >
                                     <span>

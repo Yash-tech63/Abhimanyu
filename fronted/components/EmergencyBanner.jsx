@@ -39,7 +39,7 @@ const EmergencyBanner = ({ onRequestAmbulance, onCall112, onLocationShared, onFi
   };
 
   return (
-    <section className="relative rounded-[2.5rem] md:rounded-[3.5rem] bg-gradient-to-r from-[#005e8a] via-[#006e6e] to-[#00644c] p-6 sm:p-10 md:p-14 shadow-2xl overflow-hidden border border-white/10 text-white animate-in fade-in duration-500">
+    <section className="relative rounded-[2.5rem] md:rounded-[3.5rem] bg-[#1471C7] via-[#006e6e] to-[#00644c] p-6 sm:p-10 md:p-14 shadow-2xl overflow-hidden border border-white/10 text-white animate-in fade-in duration-500">
       {/* Background Decorative Glow Effects */}
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-cyan-400/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-400/20 rounded-full blur-[120px] pointer-events-none"></div>
@@ -96,8 +96,8 @@ const EmergencyBanner = ({ onRequestAmbulance, onCall112, onLocationShared, onFi
               onClick={handleShareLocation}
               disabled={locating}
               className={`px-6 py-3 rounded-2xl text-xs md:text-sm font-semibold border transition-all flex items-center gap-2.5 cursor-pointer ${locSuccess
-                  ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg scale-105'
-                  : 'bg-[#093529]/80 hover:bg-[#0e4939] text-emerald-100 border-emerald-500/40 shadow-md hover:scale-105 active:scale-95'
+                ? 'bg-emerald-500 text-white border-emerald-400 shadow-lg scale-105'
+                : 'bg-[#093529]/80 hover:bg-[#0e4939] text-emerald-100 border-emerald-500/40 shadow-md hover:scale-105 active:scale-95'
                 }`}
             >
               <span className="text-base">{locating ? '🔄' : locSuccess ? '✅' : '🎯'}</span>

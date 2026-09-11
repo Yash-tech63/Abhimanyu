@@ -178,13 +178,15 @@ const Navbar = ({
 
     {
       label: t.consult || 'Consult',
+
       view: AppView.CONSULT,
     },
 
     {
       label: t.wellness || 'Wellness',
-      view: AppView.NUTRITION_GUIDE,
+      view: AppView.WELLNESS,
     },
+
 
 
   ];
@@ -460,7 +462,7 @@ const Navbar = ({
 
                 🔐
 
-                {t.login || 'ABHA Login'}
+                {t.login || 'Login'}
 
               </button>
 
@@ -614,7 +616,7 @@ const Navbar = ({
 
                 {' '}
 
-                {t.login || 'ABHA Login'}
+                {t.login || 'Login'}
 
               </button>
 

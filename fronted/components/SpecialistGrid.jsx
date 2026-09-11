@@ -125,13 +125,13 @@ const SpecialistGrid = ({
     <div className="space-y-8">
 
       {/* Top Banner: Instant Video Consultation Call Section */}
-      <div className="bg-gradient-to-r from-[#1e2a3a] via-[#16273e] to-[#0f1d2e] rounded-[3rem] p-8 md:p-10 text-white shadow-2xl relative overflow-hidden border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="bg-[#1471C7] via-[#16273e] to-[#0f1d2e] rounded-[3rem] p-8 md:p-10 text-white shadow-2xl relative overflow-hidden border border-white/10 flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div className="space-y-3 max-w-2xl text-center md:text-left relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-black uppercase tracking-wider border border-blue-400/30">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
-            <span>24/7 LIVE DOCTOR CAMERA CALL</span>
+            <span className='text-white'>24/7 LIVE DOCTOR CAMERA CALL</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">

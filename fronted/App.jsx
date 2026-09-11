@@ -145,6 +145,8 @@ const App = () => {
   const renderView = () => {
     switch (currentView) {
       case AppView.HOME: return renderHomeContent();
+      case AppView.WELLNESS:
+        return <AskScan onNavigate={setCurrentView} lang={lang} />;
       case AppView.STORE:
         return (
           <StoreSection
