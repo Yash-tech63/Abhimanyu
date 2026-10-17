@@ -264,11 +264,13 @@ const AuthBackground3D = () => {
 const LoginForm = ({
   onClose,
   onLoginSuccess,
+  onDoctorClick,
 }) => {
 
   // LOGIN | REGISTER | OTP
   const [screen, setScreen] =
     useState("LOGIN");
+  const [role, setRole] = useState("USER");
 
   // ===================================================
   // LOGIN DATA
@@ -827,6 +829,46 @@ const LoginForm = ({
 
 
   // ===================================================
+  // RESEND OTP
+  // ===================================================
+
+  const handleResendOTP = async () => {
+    if (!loginData.email.trim()) {
+      setError("Email is required to resend OTP.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+      setMessage("");
+
+      const response = await api.post("/otp/send", {
+        email: loginData.email.trim().toLowerCase(),
+      });
+
+      if (response.data?.success === false) {
+        throw new Error(
+          response.data?.message || "Failed to resend OTP"
+        );
+      }
+
+      setOtp("");
+      setSeconds(30);
+      setMessage("A new OTP has been sent to your email.");
+    } catch (err) {
+      console.error("RESEND OTP ERROR:", err);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to resend OTP"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ===================================================
   // BACK TO LOGIN
   // ===================================================
 
@@ -853,198 +895,74 @@ const LoginForm = ({
   // ===================================================
 
   const renderLogin = () => (
-
-
-    <form
-      onSubmit={handleLogin}
-      className="space-y-5"
-    >
-
-      <div>
-
-        <label className="mb-2 block text-sm font-bold text-slate-600">
-
-          Email Address
-
-        </label>
-
-        <input
-          type="email"
-
-          name="email"
-
-          value={
-            loginData.email
-          }
-
-          onChange={
-            handleLoginChange
-          }
-
-          placeholder="Enter your email"
-
-          required
-
-          className={inputClass}
-        />
-
-      </div>
-
-
-      <div>
-
-        <label className="mb-2 block text-sm font-bold text-slate-600">
-
-          Password
-
-        </label>
-
-        <input
-          type="password"
-
-          name="password"
-
-          value={
-            loginData.password
-          }
-
-          onChange={
-            handleLoginChange
-          }
-
-          placeholder="Enter your password"
-
-          required
-
-          className={inputClass}
-        />
-
-      </div>
-
-
-      <button
-        type="submit"
-
-        disabled={loading}
-
-        className="
-      w-full
-      rounded-xl
-      bg-[#2f80ed]
-      py-3.5
-      font-black
-      text-white
-      shadow-lg
-      shadow-blue-200
-      transition
-      hover:bg-blue-600
-      disabled:opacity-60
-    "
-      >
-
-        {loading
-          ? "Please wait..."
-          : "Login "}
-
-      </button>
-
-
-      <div className="pt-3 text-center">
-
-        <p className="text-sm text-slate-500">
-
-          Don't have an account?
-
-        </p>
-
+    <>
+      <div className="
+    mb-6
+    flex
+    rounded-2xl
+    bg-slate-100
+    p-1
+">
 
         <button
           type="button"
-
           onClick={() => {
-
-            setScreen("REGISTER");
-
+            setRole("USER");
             setError("");
-
             setMessage("");
-
           }}
-
-          className="
-        mt-2
-        font-bold
-        text-[#2f80ed]
-        hover:underline
-      "
+          className={`
+            flex-1
+            rounded-xl
+            py-3
+            text-sm
+            font-black
+            transition
+            ${role === "USER"
+              ? "bg-white text-[#2f80ed] shadow"
+              : "text-slate-500"
+            }
+        `}
         >
+          👤 Patient
+        </button>
 
-          Create Account
-
+        <button
+          type="button"
+          onClick={() => {
+            setRole("DOCTOR");
+            setError("");
+            setMessage("");
+            onDoctorClick?.();
+          }}
+          className={`
+    flex-1
+    rounded-xl
+    py-3
+    text-sm
+    font-black
+    transition
+    ${role === "DOCTOR"
+              ? "bg-white text-[#2f80ed] shadow"
+              : "text-slate-500"
+            }
+  `}
+        >
+          🩺 Doctor
         </button>
 
       </div>
 
-    </form>
-
-
-  );
-
-  // ===================================================
-  // REGISTER PAGE
-  // ===================================================
-
-  const renderRegister = () => (
-
-
-    <form
-      onSubmit={handleRegister}
-      className="space-y-4"
-    >
-
-      <div className="grid gap-4 sm:grid-cols-2">
-
-
-        {/* FULL NAME */}
+      <form
+        onSubmit={handleLogin}
+        className="space-y-5"
+      >
 
         <div>
 
           <label className="mb-2 block text-sm font-bold text-slate-600">
 
-            Full Name *
-
-          </label>
-
-          <input
-            type="text"
-
-            name="name"
-
-            value={
-              registerData.name
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            placeholder="Full name"
-
-            required
-
-            className={inputClass}
-          />
-
-        </div>
-
-
-        {/* EMAIL */}
-
-        <div>
-
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Email *
+            Email Address
 
           </label>
 
@@ -1054,14 +972,14 @@ const LoginForm = ({
             name="email"
 
             value={
-              registerData.email
+              loginData.email
             }
 
             onChange={
-              handleRegisterChange
+              handleLoginChange
             }
 
-            placeholder="Email address"
+            placeholder="Enter your email"
 
             required
 
@@ -1071,162 +989,11 @@ const LoginForm = ({
         </div>
 
 
-        {/* PHONE */}
-
         <div>
 
           <label className="mb-2 block text-sm font-bold text-slate-600">
 
-            Phone Number
-
-          </label>
-
-          <input
-            type="tel"
-
-            name="phone"
-
-            value={
-              registerData.phone
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            placeholder="9876543210"
-
-            maxLength="10"
-
-            className={inputClass}
-          />
-
-        </div>
-
-
-        {/* GENDER */}
-
-        <div>
-
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Gender
-
-          </label>
-
-          <select
-            name="gender"
-
-            value={
-              registerData.gender
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            className={inputClass}
-          >
-
-            <option value="">
-              Select Gender
-            </option>
-
-            <option value="Male">
-              Male
-            </option>
-
-            <option value="Female">
-              Female
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
-
-          </select>
-
-        </div>
-
-
-        {/* DATE OF BIRTH */}
-
-        <div>
-
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Date of Birth
-
-          </label>
-
-          <input
-            type="date"
-
-            name="dateOfBirth"
-
-            value={
-              registerData.dateOfBirth
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            className={inputClass}
-          />
-
-        </div>
-
-
-        {/* BLOOD GROUP */}
-
-        <div>
-
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Blood Group
-
-          </label>
-
-          <select
-            name="bloodGroup"
-
-            value={
-              registerData.bloodGroup
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            className={inputClass}
-          >
-
-            <option value="">
-              Select Blood Group
-            </option>
-
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-
-          </select>
-
-        </div>
-
-
-        {/* PASSWORD */}
-
-        <div>
-
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Password *
+            Password
 
           </label>
 
@@ -1236,14 +1003,14 @@ const LoginForm = ({
             name="password"
 
             value={
-              registerData.password
+              loginData.password
             }
 
             onChange={
-              handleRegisterChange
+              handleLoginChange
             }
 
-            placeholder="Minimum 6 characters"
+            placeholder="Enter your password"
 
             required
 
@@ -1253,47 +1020,12 @@ const LoginForm = ({
         </div>
 
 
-        {/* CONFIRM PASSWORD */}
+        <button
+          type="submit"
 
-        <div>
+          disabled={loading}
 
-          <label className="mb-2 block text-sm font-bold text-slate-600">
-
-            Confirm Password *
-
-          </label>
-
-          <input
-            type="password"
-
-            name="confirmPassword"
-
-            value={
-              registerData.confirmPassword
-            }
-
-            onChange={
-              handleRegisterChange
-            }
-
-            placeholder="Confirm password"
-
-            required
-
-            className={inputClass}
-          />
-
-        </div>
-
-      </div>
-
-
-      <button
-        type="submit"
-
-        disabled={loading}
-
-        className="
+          className="
       w-full
       rounded-xl
       bg-[#2f80ed]
@@ -1306,54 +1038,417 @@ const LoginForm = ({
       hover:bg-blue-600
       disabled:opacity-60
     "
-      >
+        >
 
-        {loading
-          ? "Creating Account..."
-          : "Create Account"}
+          {loading
+            ? "Please wait..."
+            : "Login "}
 
-      </button>
-
-
-      <div className="pt-2 text-center">
-
-        <p className="text-sm text-slate-500">
-
-          Already have an account?
-
-        </p>
+        </button>
 
 
-        <button
-          type="button"
+        <div className="pt-3 text-center">
 
-          onClick={() => {
+          <p className="text-sm text-slate-500">
 
-            setScreen("LOGIN");
+            Don't have an account?
 
-            setError("");
+          </p>
 
-            setMessage("");
 
-          }}
+          <button
+            type="button"
 
-          className="
+            onClick={() => {
+
+              setScreen("REGISTER");
+
+              setError("");
+
+              setMessage("");
+
+            }}
+
+            className="
         mt-2
         font-bold
         text-[#2f80ed]
         hover:underline
       "
+          >
+
+            Create Account
+
+          </button>
+
+        </div>
+
+      </form>
+    </>
+  );
+
+  // ===================================================
+  // REGISTER PAGE
+  // ===================================================
+
+  const renderRegister = () => (
+    <>
+      <form
+        onSubmit={handleRegister}
+        className="space-y-4"
+      >
+
+        <div className="grid gap-4 sm:grid-cols-2">
+
+
+          {/* FULL NAME */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Full Name *
+
+            </label>
+
+            <input
+              type="text"
+
+              name="name"
+
+              value={
+                registerData.name
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              placeholder="Full name"
+
+              required
+
+              className={inputClass}
+            />
+
+          </div>
+
+
+          {/* EMAIL */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Email *
+
+            </label>
+
+            <input
+              type="email"
+
+              name="email"
+
+              value={
+                registerData.email
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              placeholder="Email address"
+
+              required
+
+              className={inputClass}
+            />
+
+          </div>
+
+
+          {/* PHONE */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Phone Number
+
+            </label>
+
+            <input
+              type="tel"
+
+              name="phone"
+
+              value={
+                registerData.phone
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              placeholder="9876543210"
+
+              maxLength="10"
+
+              className={inputClass}
+            />
+
+          </div>
+
+
+          {/* GENDER */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Gender
+
+            </label>
+
+            <select
+              name="gender"
+
+              value={
+                registerData.gender
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              className={inputClass}
+            >
+
+              <option value="">
+                Select Gender
+              </option>
+
+              <option value="Male">
+                Male
+              </option>
+
+              <option value="Female">
+                Female
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
+
+
+          {/* DATE OF BIRTH */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Date of Birth
+
+            </label>
+
+            <input
+              type="date"
+
+              name="dateOfBirth"
+
+              value={
+                registerData.dateOfBirth
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              className={inputClass}
+            />
+
+          </div>
+
+
+          {/* BLOOD GROUP */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Blood Group
+
+            </label>
+
+            <select
+              name="bloodGroup"
+
+              value={
+                registerData.bloodGroup
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              className={inputClass}
+            >
+
+              <option value="">
+                Select Blood Group
+              </option>
+
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+
+            </select>
+
+          </div>
+
+
+          {/* PASSWORD */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Password *
+
+            </label>
+
+            <input
+              type="password"
+
+              name="password"
+
+              value={
+                registerData.password
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              placeholder="Minimum 6 characters"
+
+              required
+
+              className={inputClass}
+            />
+
+          </div>
+
+
+          {/* CONFIRM PASSWORD */}
+
+          <div>
+
+            <label className="mb-2 block text-sm font-bold text-slate-600">
+
+              Confirm Password *
+
+            </label>
+
+            <input
+              type="password"
+
+              name="confirmPassword"
+
+              value={
+                registerData.confirmPassword
+              }
+
+              onChange={
+                handleRegisterChange
+              }
+
+              placeholder="Confirm password"
+
+              required
+
+              className={inputClass}
+            />
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="submit"
+
+          disabled={loading}
+
+          className="
+      w-full
+      rounded-xl
+      bg-[#2f80ed]
+      py-3.5
+      font-black
+      text-white
+      shadow-lg
+      shadow-blue-200
+      transition
+      hover:bg-blue-600
+      disabled:opacity-60
+    "
         >
 
-          Login Here
+          {loading
+            ? "Creating Account..."
+            : "Create Account"}
 
         </button>
 
-      </div>
 
-    </form>
+        <div className="pt-2 text-center">
+
+          <p className="text-sm text-slate-500">
+
+            Already have an account?
+
+          </p>
 
 
+          <button
+            type="button"
+
+            onClick={() => {
+
+              setScreen("LOGIN");
+
+              setError("");
+
+              setMessage("");
+
+            }}
+
+            className="
+        mt-2
+        font-bold
+        text-[#2f80ed]
+        hover:underline
+      "
+          >
+
+            Login Here
+
+          </button>
+
+        </div>
+
+      </form>
+    </>
   );
 
   // ===================================================
@@ -1361,57 +1456,56 @@ const LoginForm = ({
   // ===================================================
 
   const renderOTP = () => (
+    <>
+      <form
+        onSubmit={handleVerifyOTP}
+        className="space-y-6"
+      >
+
+        <div className="text-center">
+
+          <div className="mb-4 text-5xl">
+
+            🔐
+
+          </div>
 
 
-    <form
-      onSubmit={handleVerifyOTP}
-      className="space-y-6"
-    >
 
-      <div className="text-center">
-
-        <div className="mb-4 text-5xl">
-
-          🔐
 
         </div>
 
 
-
-
-      </div>
-
-
-      <div>
+        <div>
 
 
 
-        <input
-          type="text"
+          <input
+            type="text"
 
-          inputMode="numeric"
+            inputMode="numeric"
 
-          autoComplete="one-time-code"
+            autoComplete="one-time-code"
 
-          maxLength={6}
+            maxLength={6}
 
-          value={otp}
+            value={otp}
 
-          onChange={(e) => {
+            onChange={(e) => {
 
-            const value =
-              e.target.value.replace(
-                /\D/g,
-                ""
-              );
+              const value =
+                e.target.value.replace(
+                  /\D/g,
+                  ""
+                );
 
-            setOtp(value);
+              setOtp(value);
 
-          }}
+            }}
 
-          placeholder="000000"
+            placeholder="000000"
 
-          className="
+            className="
         w-full
         rounded-xl
         border
@@ -1429,20 +1523,20 @@ const LoginForm = ({
         focus:ring-2
         focus:ring-blue-100
       "
-        />
+          />
 
-      </div>
+        </div>
 
 
-      <button
-        type="submit"
+        <button
+          type="submit"
 
-        disabled={
-          loading ||
-          otp.length !== 6
-        }
+          disabled={
+            loading ||
+            otp.length !== 6
+          }
 
-        className="
+          className="
       w-full
       rounded-xl
       bg-[#2f80ed]
@@ -1455,74 +1549,73 @@ const LoginForm = ({
       hover:bg-blue-600
       disabled:opacity-60
     "
-      >
+        >
 
-        {loading
-          ? "Verifying..."
-          : "Verify OTP"}
+          {loading
+            ? "Verifying..."
+            : "Verify OTP"}
 
-      </button>
+        </button>
 
 
-      {/* RESEND */}
+        {/* RESEND */}
 
-      <div className="text-center">
+        <div className="text-center">
 
-        <button
-          type="button"
+          <button
+            type="button"
 
-          onClick={
-            handleResendOTP
-          }
+            onClick={
+              handleResendOTP
+            }
 
-          disabled={
-            seconds > 0 ||
-            loading
-          }
+            disabled={
+              seconds > 0 ||
+              loading
+            }
 
-          className={`
+            className={`
         font-bold
         transition
 
         ${seconds > 0
-              ? "cursor-not-allowed text-slate-400"
-              : "text-[#2f80ed] hover:underline"
-            }
+                ? "cursor-not-allowed text-slate-400"
+                : "text-[#2f80ed] hover:underline"
+              }
       `}
-        >
+          >
 
-          {seconds > 0
-            ? `Resend OTP in ${seconds}s`
-            : "Resend OTP"}
+            {seconds > 0
+              ? `Resend OTP in ${seconds}s`
+              : "Resend OTP"}
 
-        </button>
+          </button>
 
-      </div>
+        </div>
 
 
-      {/* BACK */}
+        {/* BACK */}
 
-      <button
-        type="button"
+        <button
+          type="button"
 
-        onClick={backToLogin}
+          onClick={backToLogin}
 
-        className="
+          className="
       w-full
       text-sm
       font-bold
       text-slate-500
       hover:text-[#2f80ed]
     "
-      >
+        >
 
-        ← Change Login Details
+          ← Change Login Details
 
-      </button>
+        </button>
 
-    </form>
-
-
+      </form>
+    </>
   );
 
   // ===================================================
@@ -1530,7 +1623,6 @@ const LoginForm = ({
   // ===================================================
 
   return (
-
 
     <div
       className="
@@ -1753,10 +1845,7 @@ const LoginForm = ({
         </div>
 
       </div>
-
     </div>
-
-
   );
 
 };

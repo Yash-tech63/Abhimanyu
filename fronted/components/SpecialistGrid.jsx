@@ -1,26 +1,25 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AppView, Language } from '../../backened/types';
 import { translations } from '../../backened/i18n';
 import BookingModal from './BookingModal';
 import SpecialistProfileModal from './SpecialistProfileModal';
 import VideoConsultModal from './VideoConsultModal';
+import api from "../services/api";
 
 const DEFAULT_DOCTOR_IMAGE = 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600';
 
-const specialists = [
-  { id: '1', name: 'Dr. Ananya Sharma', specialty: 'General Physician', description: 'Expert in primary healthcare and preventive clinical practices.', fee: 299, image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 12, mciNumber: 'MCI-92831', education: 'MBBS, MD (General Medicine)', verificationSource: 'Ayushman Bharat' },
-  { id: '2', name: 'Dr. Rajesh Khanna', specialty: 'Dermatologist', description: 'Renowned expert in medical dermatology and skin diagnostics.', fee: 399, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600', availability: 'busy', experience: 10, mciNumber: 'MCI-88219', education: 'MBBS, DDVL', verificationSource: 'MCI Verified' },
-  { id: '3', name: 'Dr. Meera Reddy', specialty: 'Pediatrician', description: 'Dedicated to comprehensive childcare and developmental health.', fee: 499, image: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 9, mciNumber: 'MCI-66120', education: 'MBBS, DCH, MD (Peds)', verificationSource: 'Ayushman Bharat' },
-  { id: '4', name: 'Dr. Amitav Ghosh', specialty: 'Cardiologist', description: 'Leading interventional cardiologist for advanced cardiac care.', fee: 599, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600', availability: 'offline', experience: 20, mciNumber: 'MCI-00192', education: 'MBBS, MD, DM (Cardio)', verificationSource: 'MCI Verified' },
-  { id: '5', name: 'Dr. Sunita Rao', specialty: 'Gynecologist', description: 'Specialist in reproductive health and maternal clinical care.', fee: 449, image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 18, mciNumber: 'MCI-99011', education: 'MBBS, MS (OBG)', verificationSource: 'Ayushman Bharat' },
-  { id: '6', name: 'Dr. Harpreet Singh', specialty: 'Dentist', description: 'Aesthetic dentistry and clinical maxillofacial specialist.', fee: 349, image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 7, mciNumber: 'DCI-9921', education: 'BDS, MDS', verificationSource: 'Ayushman Bharat' },
-  { id: '7', name: 'Dr. Vikram Seth', specialty: 'Orthopedic', description: 'Expert in sports medicine and joint reconstruction therapy.', fee: 499, image: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 15, mciNumber: 'MCI-22310', education: 'MBBS, MS (Ortho)', verificationSource: 'MCI Verified' },
-  { id: '8', name: 'Dr. Sneha Kapoor', specialty: 'Neurologist', description: 'Board-certified neurologist focusing on epilepsy and neuro-health.', fee: 699, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600', availability: 'busy', experience: 14, mciNumber: 'MCI-77102', education: 'MBBS, MD, DM (Neuro)', verificationSource: 'MCI Verified' },
-  { id: '9', name: 'Dr. Arjun Nair', specialty: 'Oncologist', description: 'Specialist in clinical oncology and advanced chemotherapy.', fee: 799, image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 16, mciNumber: 'MCI-44102', education: 'MBBS, MD, DM (Onco)', verificationSource: 'MCI Verified' },
-  { id: '10', name: 'Dr. Priya Das', specialty: 'Psychiatrist', description: 'Focus on therapeutic mental health and cognitive behavioral therapy.', fee: 549, image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 11, mciNumber: 'MCI-33211', education: 'MBBS, MD (Psych)', verificationSource: 'Ayushman Bharat' },
-  { id: '11', name: 'Dr. Rohan Mehta', specialty: 'Endocrinologist', description: 'Expert in metabolic disorders and hormone replacement therapies.', fee: 459, image: 'https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?auto=format&fit=crop&q=80&w=600', availability: 'busy', experience: 13, mciNumber: 'MCI-11922', education: 'MBBS, MD, DNB', verificationSource: 'MCI Verified' },
-  { id: '12', name: 'Dr. Kavita Iyer', specialty: 'Ophthalmologist', description: 'Clinical eye care specialist focusing on retina and cataracts.', fee: 399, image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 10, mciNumber: 'MCI-88200', education: 'MBBS, MS (Oph)', verificationSource: 'Ayushman Bharat' },
-];
+
+//   { id: '3', name: 'Dr. Meera Reddy', specialty: 'Pediatrician', description: 'Dedicated to comprehensive childcare and developmental health.', fee: 499, image: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 9, mciNumber: 'MCI-66120', education: 'MBBS, DCH, MD (Peds)', verificationSource: 'Ayushman Bharat' },
+//   { id: '4', name: 'Dr. Amitav Ghosh', specialty: 'Cardiologist', description: 'Leading interventional cardiologist for advanced cardiac care.', fee: 599, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=600', availability: 'offline', experience: 20, mciNumber: 'MCI-00192', education: 'MBBS, MD, DM (Cardio)', verificationSource: 'MCI Verified' },
+//   { id: '5', name: 'Dr. Sunita Rao', specialty: 'Gynecologist', description: 'Specialist in reproductive health and maternal clinical care.', fee: 449, image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 18, mciNumber: 'MCI-99011', education: 'MBBS, MS (OBG)', verificationSource: 'Ayushman Bharat' },
+//   { id: '6', name: 'Dr. Harpreet Singh', specialty: 'Dentist', description: 'Aesthetic dentistry and clinical maxillofacial specialist.', fee: 349, image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 7, mciNumber: 'DCI-9921', education: 'BDS, MDS', verificationSource: 'Ayushman Bharat' },
+//   { id: '7', name: 'Dr. Vikram Seth', specialty: 'Orthopedic', description: 'Expert in sports medicine and joint reconstruction therapy.', fee: 499, image: 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 15, mciNumber: 'MCI-22310', education: 'MBBS, MS (Ortho)', verificationSource: 'MCI Verified' },
+//   { id: '8', name: 'Dr. Sneha Kapoor', specialty: 'Neurologist', description: 'Board-certified neurologist focusing on epilepsy and neuro-health.', fee: 699, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600', availability: 'busy', experience: 14, mciNumber: 'MCI-77102', education: 'MBBS, MD, DM (Neuro)', verificationSource: 'MCI Verified' },
+//   { id: '9', name: 'Dr. Arjun Nair', specialty: 'Oncologist', description: 'Specialist in clinical oncology and advanced chemotherapy.', fee: 799, image: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 16, mciNumber: 'MCI-44102', education: 'MBBS, MD, DM (Onco)', verificationSource: 'MCI Verified' },
+//   { id: '10', name: 'Dr. Priya Das', specialty: 'Psychiatrist', description: 'Focus on therapeutic mental health and cognitive behavioral therapy.', fee: 549, image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 11, mciNumber: 'MCI-33211', education: 'MBBS, MD (Psych)', verificationSource: 'Ayushman Bharat' },
+//   { id: '11', name: 'Dr. Rohan Mehta', specialty: 'Endocrinologist', description: 'Expert in metabolic disorders and hormone replacement therapies.', fee: 459, image: 'https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?auto=format&fit=crop&q=80&w=600', availability: 'busy', experience: 13, mciNumber: 'MCI-11922', education: 'MBBS, MD, DNB', verificationSource: 'MCI Verified' },
+//   { id: '12', name: 'Dr. Kavita Iyer', specialty: 'Ophthalmologist', description: 'Clinical eye care specialist focusing on retina and cataracts.', fee: 399, image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600', availability: 'available', experience: 10, mciNumber: 'MCI-88200', education: 'MBBS, MS (Oph)', verificationSource: 'Ayushman Bharat' },
+// ];
 
 const specialistHindiSpecialties = {
   'General Physician': 'जनरल फिजिशियन',
@@ -37,20 +36,7 @@ const specialistHindiSpecialties = {
   'Ophthalmologist': 'नेत्र रोग विशेषज्ञ'
 };
 
-const specialistHindiNames = {
-  '1': 'डॉ. अनन्या शर्मा',
-  '2': 'डॉ. राजेश खन्ना',
-  '3': 'डॉ. मीरा रेड्डी',
-  '4': 'डॉ. अमिताव घोष',
-  '5': 'डॉ. सुनिता राव',
-  '6': 'डॉ. हरप्रीत सिंह',
-  '7': 'डॉ. विक्रम सेठ',
-  '8': 'डॉ. स्नेहा कपूर',
-  '9': 'डॉ. अर्जुन नायर',
-  '10': 'डॉ. प्रिया दास',
-  '11': 'डॉ. रोहन मेहता',
-  '12': 'डॉ. कविता अय्यर'
-};
+
 
 const specialistHindiDescs = {
   '1': 'प्राथमिक स्वास्थ्य देखभाल और निवारक चिकित्सा पद्धतियों में विशेषज्ञ।',
@@ -78,48 +64,196 @@ const SpecialistGrid = ({
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('none');
+  const [specialists, setSpecialists] =
+    useState([]);
 
+  const [loadingDoctors, setLoadingDoctors] =
+    useState(true);
+
+  const [doctorError, setDoctorError] =
+    useState("");
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        setLoadingDoctors(true);
+        setDoctorError("");
+
+        const response = await api.get(
+          "/doctors/get-doctors"
+        );
+
+        console.log(
+          "ALL DOCTORS FROM BACKEND:",
+          response.data
+        );
+
+        const doctors =
+          response?.data?.data?.doctors ||
+          response?.data?.data ||
+          response?.data?.doctors ||
+          [];
+
+        setSpecialists(doctors);
+
+      } catch (error) {
+        console.error(
+          "GET DOCTORS ERROR:",
+          error.response?.data ||
+          error.message
+        );
+
+        setDoctorError(
+          error.response?.data?.message ||
+          "Unable to load doctors"
+        );
+
+      } finally {
+        setLoadingDoctors(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  const formattedDoctors = useMemo(() => {
+    return specialists.map((doctor) => ({
+      id: doctor._id,
+      name: doctor.name,
+      specialty: doctor.specialization,
+      description:
+        doctor.qualifications?.join(", ") ||
+        "Qualified Medical Professional",
+      fee: doctor.consultationFee,
+      image: doctor.profilePicture || DEFAULT_DOCTOR_IMAGE,
+      availability: doctor.isOnline ? "available" : "offline",
+      experience: doctor.experienceYears,
+      mciNumber:
+        doctor.medicalCouncilRegistration?.registrationNumber || "",
+      education: doctor.qualifications?.join(", ") || "",
+      verificationSource:
+        doctor.medicalCouncilRegistration?.councilName || "",
+      doctorId: doctor._id,
+      rawDoctor: doctor,
+    }));
+  }, [specialists]);
   const isHindi = lang === Language.HI;
   const t = translations[lang].sections;
 
   const filtered = useMemo(() => {
+
     const q = searchQuery.toLowerCase().trim();
-    const tokens = q.split(/\s+/).filter(t => t.length > 0);
 
-    return specialists
-      .filter(s => activeFilter === 'All' || s.specialty === activeFilter)
+    const tokens = q
+      .split(/\s+/)
+      .filter(t => t.length > 0);
+
+    return formattedDoctors
+
+      .filter(
+        s =>
+          activeFilter === "All" ||
+          s.specialty === activeFilter
+      )
+
       .map(s => {
-        let score = 0;
-        if (tokens.length > 0) {
-          const nameLower = s.name.toLowerCase();
-          const specialtyLower = s.specialty.toLowerCase();
-          const descLower = s.description.toLowerCase();
-          const eduLower = s.education.toLowerCase();
 
-          if (nameLower.includes(q)) score += 100;
+        let score = 0;
+
+        if (tokens.length > 0) {
+
+          const nameLower =
+            s.name.toLowerCase();
+
+          const specialtyLower =
+            s.specialty.toLowerCase();
+
+          const descLower =
+            s.description.toLowerCase();
+
+          const eduLower =
+            s.education.toLowerCase();
+
+          if (nameLower.includes(q))
+            score += 100;
+
           tokens.forEach(token => {
-            if (nameLower.includes(token)) score += 50;
-            if (specialtyLower.includes(token)) score += 30;
-            if (eduLower.includes(token)) score += 20;
-            if (descLower.includes(token)) score += 10;
+
+            if (
+              nameLower.includes(token)
+            )
+              score += 50;
+
+            if (
+              specialtyLower.includes(token)
+            )
+              score += 30;
+
+            if (
+              eduLower.includes(token)
+            )
+              score += 20;
+
+            if (
+              descLower.includes(token)
+            )
+              score += 10;
           });
-          if (nameLower.startsWith(q)) score += 150;
+
+          if (
+            nameLower.startsWith(q)
+          )
+            score += 150;
+
         } else {
+
           score = 1;
+
         }
-        return { ...s, relevanceScore: score };
+
+        return {
+          ...s,
+          relevanceScore: score
+        };
       })
-      .filter(s => s.relevanceScore > 0)
+
+      .filter(
+        s => s.relevanceScore > 0
+      )
+
       .sort((a, b) => {
-        if (tokens.length > 0 && b.relevanceScore !== a.relevanceScore) {
-          return b.relevanceScore - a.relevanceScore;
+
+        if (
+          tokens.length > 0 &&
+          b.relevanceScore !==
+          a.relevanceScore
+        ) {
+          return (
+            b.relevanceScore -
+            a.relevanceScore
+          );
         }
-        if (sortBy === 'fee') return a.fee - b.fee;
-        if (sortBy === 'experience') return b.experience - a.experience;
+
+        if (sortBy === "fee")
+          return a.fee - b.fee;
+
+        if (sortBy === "experience")
+          return (
+            b.experience -
+            a.experience
+          );
+
         return 0;
       })
+
       .slice(0, limit);
-  }, [searchQuery, activeFilter, sortBy, limit]);
+
+  }, [
+    searchQuery,
+    activeFilter,
+    sortBy,
+    limit,
+    formattedDoctors
+  ]);
 
   return (
     <div className="space-y-8">
@@ -202,8 +336,11 @@ const SpecialistGrid = ({
             >
               <img
                 src={s.image || DEFAULT_DOCTOR_IMAGE}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = DEFAULT_DOCTOR_IMAGE; }}
                 alt={s.name}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = DEFAULT_DOCTOR_IMAGE;
+                }}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className={`absolute top-3 right-3 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm ${s.availability === 'available' ? 'bg-green-500' : s.availability === 'busy' ? 'bg-orange-500' : 'bg-slate-400'
@@ -218,7 +355,10 @@ const SpecialistGrid = ({
 
             <div className="px-1 flex-1 flex flex-col">
               <p className="text-[10px] font-black text-[#2f80ed] uppercase tracking-widest mb-1">
-                {isHindi ? (specialistHindiSpecialties[s.specialty] || s.specialty) : s.specialty}
+                {isHindi ? (specialistHindiSpecialties[s.specialty
+                ] || s.specialty
+                ) : s.specialty
+                }
               </p>
               <h4
                 onClick={() => setProfileSpecialist(s)}
@@ -227,7 +367,9 @@ const SpecialistGrid = ({
                 {isHindi ? (specialistHindiNames[s.id] || s.name) : s.name}
               </h4>
               <p className="text-[11px] text-slate-400 font-medium line-clamp-2 leading-relaxed mb-4">
-                {isHindi ? (specialistHindiDescs[s.id] || s.description) : s.description}
+                {isHindi ? (specialistHindiDescs[s.id] || s.description
+                ) : s.description
+                }
               </p>
 
               <div className="mt-auto pt-4 border-t border-slate-100 dark:border-white/5 space-y-3">

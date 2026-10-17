@@ -8,6 +8,7 @@ const cors =
 
 const connectDB =
     require("./src/db/db");
+const fs = require("fs");
 
 const authRoutes =
     require("./src/routes/auth.routes");
@@ -57,15 +58,7 @@ app.use(
 );
 const path = require("path");
 
-app.use(
-    "/uploads",
-    express.static(
-        path.join(
-            __dirname,
-            "uploads"
-        )
-    )
-);
+
 
 
 // Test API
@@ -91,6 +84,14 @@ app.use(
     '/api/otp',
     otpRoutes
 );
+const opdTokenRoutes = require('./src/routes/opdTokenRoutes')
+app.use('/api/opd', opdTokenRoutes)
+
+const doctorRoutes = require("./src/routes/doctor.routes");
+app.use("/api/doctors", doctorRoutes);
+
+
+
 
 // 404
 app.use(

@@ -19,6 +19,7 @@ import RemedyHubView from './components/RemedyHubView';
 import EquipmentPortal from './components/EquipmentPortal';
 import AmbulancePortal from './components/AmbulancePortal';
 import LoginForm from './components/LoginForm';
+import Doctor from './components/Doctor';
 import CleanCutEditor from './components/CleanCutEditor';
 import HealthBot from './components/HealthBot';
 import HealthAssistant from './components/HealthAssistant';
@@ -32,6 +33,7 @@ const App = () => {
   const [lang, setLang] = useState(Language.EN);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showDoctorAuth, setShowDoctorAuth] = useState(false);
   const [equipmentInitialMode, setEquipmentInitialMode] = useState('buy');
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
@@ -266,7 +268,27 @@ const App = () => {
         </div>
       )}
 
-      {showLogin && <LoginForm onClose={() => setShowLogin(false)} />}
+      {showLogin && (
+        <LoginForm
+          onClose={() => setShowLogin(false)}
+          onDoctorClick={() => {
+            setShowLogin(false);
+            setShowDoctorAuth(true);
+          }}
+        />
+      )}
+
+      {showDoctorAuth && (
+        <Doctor
+          onClose={() => setShowDoctorAuth(false)}
+        />
+      )}
+
+      {showDoctorAuth && (
+        <Doctor
+          onClose={() => setShowDoctorAuth(false)}
+        />
+      )}
 
       <footer className="bg-white dark:bg-[#070b14] border-t dark:border-white/5 py-12 px-6">
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black uppercase tracking-widest text-slate-300">

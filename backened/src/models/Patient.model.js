@@ -126,6 +126,32 @@ const PatientSchema = new mongoose.Schema(
             type: String,
             default: "patient",
         },
+        appointments: [
+            {
+                tokenId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "OPDToken",
+                },
+
+                doctorId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Doctor",
+                },
+
+                appointmentDate: String,
+
+                department: String,
+
+                tokenNumber: Number,
+
+                estimatedTime: String,
+
+                status: {
+                    type: String,
+                    default: "booked",
+                },
+            },
+        ],
 
 
     },

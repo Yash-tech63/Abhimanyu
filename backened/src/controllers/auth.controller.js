@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const Patient = require("../models/Patient.model");
 const generateJWT = require("../../utils/generateJWT");
+const { sendMail } = require("../../utils/sendEmail")
 
 // ==========================================
 // PATIENT REGISTER
