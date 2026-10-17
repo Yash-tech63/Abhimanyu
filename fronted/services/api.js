@@ -1,9 +1,10 @@
 import axios from "axios";
 
 
-const API_URL =
-    import.meta.env.VITE_API_URL ||
-    "https://abhimanyu-cn5i.vercel.app/api";
+const API_URL = import.meta.env.PROD
+    ? "https://abhimanyu-cn5i.vercel.app/api"
+    : "http://localhost:5000/api";
+
 
 
 
