@@ -110,24 +110,12 @@ const DoctorProfilePicture = ({
                 file
             );
 
-            console.log(
-                "========== PROFILE IMAGE UPLOAD =========="
-            );
 
-            console.log(
-                "FILE:",
-                file.name
-            );
 
-            console.log(
-                "SIZE:",
-                file.size
-            );
 
-            console.log(
-                "TYPE:",
-                file.type
-            );
+
+
+
 
             /*
              * Backend request
@@ -137,10 +125,7 @@ const DoctorProfilePicture = ({
                 formData
             );
 
-            console.log(
-                "UPLOAD RESPONSE:",
-                response.data
-            );
+
 
             /*
              * Backend response se updated doctor

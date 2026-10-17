@@ -153,19 +153,14 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
       // 2. GET PATIENT PROFILE
       // -------------------------------------------------
 
-      console.log("================================");
-      console.log("FETCHING PATIENT PROFILE");
-      console.log("================================");
+
 
       let profileResponse;
 
       try {
         profileResponse = await api.get("/auth/profile");
 
-        console.log(
-          "PATIENT PROFILE:",
-          profileResponse.data
-        );
+
       } catch (profileError) {
         console.error(
           "PATIENT PROFILE ERROR:",
@@ -247,10 +242,7 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
         symptoms: symptoms?.trim() || "",
       };
 
-      console.log("================================");
-      console.log("SENDING OPD DATA:");
-      console.log(opdData);
-      console.log("================================");
+
 
       // -------------------------------------------------
       // 6. CREATE OPD TOKEN
@@ -261,10 +253,7 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
         opdData
       );
 
-      console.log(
-        "OPD CREATE RESPONSE:",
-        response.data
-      );
+
 
       // -------------------------------------------------
       // 7. CHECK RESPONSE
@@ -289,10 +278,7 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
         );
       }
 
-      console.log(
-        "OPD TOKEN CREATED:",
-        tokenData
-      );
+
 
       // -------------------------------------------------
       // 9. SAVE TOKEN IN STATE
@@ -350,10 +336,6 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
           new Date().toISOString(),
       };
 
-      console.log(
-        "SAVING APPOINTMENT:",
-        appointment
-      );
 
       // -------------------------------------------------
       // IMPORTANT:
@@ -364,9 +346,7 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
       try {
         storage.saveAppointment(appointment);
 
-        console.log(
-          "BOOKING SAVED SUCCESSFULLY"
-        );
+
       } catch (storageError) {
         console.error(
           "STORAGE SAVE ERROR:",
@@ -378,9 +358,6 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
       // 11. OPEN SUCCESS PAGE
       // -------------------------------------------------
 
-      console.log(
-        "OPENING SUCCESS PAGE..."
-      );
 
       setCreatedToken(tokenData);
 
@@ -431,10 +408,7 @@ const BookingModal = ({ specialist, onClose, onConfirm }) => {
   // =====================================================
 
   const handleDone = () => {
-    console.log(
-      "BOOKING DONE:",
-      createdToken
-    );
+
 
     // Parent callback only after success screen
     if (onConfirm) {

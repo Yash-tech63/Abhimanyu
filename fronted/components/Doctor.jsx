@@ -690,17 +690,13 @@ const Doctor = ({ onClose, onLoginSuccess }) => {
 
             };
 
-            console.log("========== DOCTOR SIGNUP ==========");
 
-            console.log("URL:", API.signup);
 
-            console.log("PAYLOAD:", payload);
 
-            console.log("MEDICAL REGISTRATION:", payload.medicalCouncilRegistration);
+
 
             const response = await api.post(API.signup, payload);
 
-            console.log("SIGNUP RESPONSE:", response.data);
 
             if (response?.data?.success === false) {
 
@@ -712,9 +708,7 @@ const Doctor = ({ onClose, onLoginSuccess }) => {
 
             const doctorData = extractDoctor(response);
 
-            console.log("TOKEN:", token);
 
-            console.log("DOCTOR DATA:", doctorData);
 
             if (token) {
 
@@ -929,12 +923,9 @@ const Doctor = ({ onClose, onLoginSuccess }) => {
                 doctor?.doctor?._id ||
                 doctor?.doctor?.id;
 
-            console.log("========== OPD DEBUG ==========");
-            console.log("FULL DOCTOR:", doctor);
-            console.log("DOCTOR ID:", doctorId);
+
 
             if (!doctorId) {
-                console.log("❌ DOCTOR ID NOT FOUND");
                 setOpdTokens([]);
                 return;
             }
@@ -943,12 +934,9 @@ const Doctor = ({ onClose, onLoginSuccess }) => {
 
             const response = await api.get(`/opd/doctor/${doctorId}`);
 
-            console.log("✅ OPD API RESPONSE:", response.data);
 
             const tokens = response?.data?.tokens || [];
 
-            console.log("✅ TOKENS:", tokens);
-            console.log("✅ TOKEN COUNT:", tokens.length);
 
             setOpdTokens(tokens);
 

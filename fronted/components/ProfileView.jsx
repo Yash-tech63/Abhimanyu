@@ -154,10 +154,7 @@ const ProfileView = ({ onBack }) => {
 
         const profileResponse = await api.get("/auth/profile");
 
-        console.log(
-          "PROFILE FROM BACKEND:",
-          profileResponse.data
-        );
+
 
         const userData =
           profileResponse.data?.user ||
@@ -191,10 +188,6 @@ const ProfileView = ({ onBack }) => {
               `/opd/patient/${patientId}`
             );
 
-            console.log(
-              "PATIENT APPOINTMENTS FROM BACKEND:",
-              appointmentResponse.data
-            );
 
             const appointmentData =
               appointmentResponse.data?.tokens ||
@@ -391,7 +384,6 @@ const ProfileView = ({ onBack }) => {
 
 
 
-      console.log('REPORT UPLOAD:', response.data);
 
 
 
@@ -704,17 +696,13 @@ const ProfileView = ({ onBack }) => {
         },
       };
 
-      console.log("UPDATING PROFILE:", profilePayload);
 
       const response = await api.put(
         "/auth/profile",
         profilePayload
       );
 
-      console.log(
-        "PROFILE UPDATE RESPONSE:",
-        response.data
-      );
+
 
       const savedProfile =
         response.data?.user ||

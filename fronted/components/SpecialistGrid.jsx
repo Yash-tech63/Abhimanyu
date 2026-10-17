@@ -82,10 +82,7 @@ const SpecialistGrid = ({
           "/doctors/get-doctors"
         );
 
-        console.log(
-          "ALL DOCTORS FROM BACKEND:",
-          response.data
-        );
+
 
         const doctors =
           response?.data?.data?.doctors ||
